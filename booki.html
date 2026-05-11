@@ -1,0 +1,1886 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BookNest – Read. Connect. Grow.</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;0,9..40,800;0,9..40,900&family=Poppins:wght@600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+/* ════════════════════════════════════════════
+   RESET & VARIABLES
+════════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --sb-w:196px;
+  --sb-bg:#1a1d2e;
+  --page-bg:#f0f2f7;
+  --navy:#111827;
+  --text:#111827;
+  --muted:#6b7280;
+  --border:#e5e7eb;
+  --white:#fff;
+  --accent:#7c3aed;
+  --accent-rgb:124,58,237;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.05);
+  --shadow-md:0 4px 14px rgba(0,0,0,.09);
+  --shadow-lg:0 10px 30px rgba(0,0,0,.13);
+}
+html,body{height:100%;font-family:'DM Sans',sans-serif;background:var(--page-bg);color:var(--text);font-size:14px;line-height:1.5;overflow-x:hidden}
+button,input,select,textarea{font-family:'DM Sans',sans-serif;outline:none;border:none}
+button{cursor:pointer}
+img{display:block;max-width:100%}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:#d1d5db;border-radius:4px}
+
+/* ════════════════════════════════════════════
+   ANIMATIONS
+════════════════════════════════════════════ */
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes float1{0%{transform:translateY(0) rotate(-3deg)}100%{transform:translateY(-12px) rotate(2deg)}}
+@keyframes float2{0%{transform:translateY(0) rotate(2deg)}100%{transform:translateY(-10px) rotate(-2deg)}}
+@keyframes float3{0%{transform:translateY(0) rotate(-1deg)}100%{transform:translateY(-8px) rotate(3deg)}}
+@keyframes spinSlow{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.05)}}
+@keyframes slideIn{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:translateX(0)}}
+.mode-fade{animation:fadeUp .38s ease both}
+
+/* ════════════════════════════════════════════
+   LAYOUT
+════════════════════════════════════════════ */
+.layout{display:flex;min-height:100vh}
+
+/* ════════════════════════════════════════════
+   SIDEBAR
+════════════════════════════════════════════ */
+.sidebar{
+  width:var(--sb-w);
+  background:var(--sb-bg);
+  position:fixed;top:0;left:0;
+  height:100vh;z-index:500;
+  display:flex;flex-direction:column;
+  overflow-y:auto;overflow-x:hidden;
+  transition:transform .32s cubic-bezier(.4,0,.2,1);
+  flex-shrink:0;
+}
+.sidebar::-webkit-scrollbar{display:none}
+.sidebar.collapsed{transform:translateX(-100%)}
+
+/* Logo */
+.sb-logo{
+  padding:16px 14px 14px;
+  display:flex;align-items:center;gap:10px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.sb-logo-svg{width:42px;height:42px;flex-shrink:0}
+.sb-logo-name{font-family:'Poppins',sans-serif;font-size:19px;font-weight:800;color:#fff;display:block;line-height:1}
+.sb-logo-name em{color:#f97316;font-style:normal}
+.sb-logo-tag{font-size:9px;color:rgba(255,255,255,.32);display:block;margin-top:3px;letter-spacing:.3px;line-height:1.4}
+
+/* Nav */
+.sb-nav{padding:10px 8px;flex:1}
+.sbi{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 11px;border-radius:10px;
+  color:rgba(255,255,255,.55);font-size:13.5px;font-weight:500;
+  cursor:pointer;transition:all .15s;margin-bottom:1px;
+  position:relative;user-select:none;
+}
+.sbi i{width:17px;text-align:center;font-size:14px;color:rgba(255,255,255,.32);flex-shrink:0;transition:color .15s}
+.sbi:hover{background:rgba(255,255,255,.07);color:rgba(255,255,255,.88)}
+.sbi:hover i{color:rgba(255,255,255,.6)}
+.sbi.active{background:var(--accent);color:#fff;font-weight:600}
+.sbi.active i{color:#fff}
+.sbi .nbadge{
+  background:#ef4444;color:#fff;
+  font-size:9px;font-weight:800;
+  padding:1.5px 6px;border-radius:20px;
+  margin-left:auto;line-height:14px;flex-shrink:0;
+}
+
+/* Reader Club Card */
+.sb-club{
+  margin:4px 10px 8px;
+  border-radius:14px;
+  background:linear-gradient(145deg,#312e81,#6d28d9,#7c3aed);
+  padding:16px 14px;position:relative;overflow:hidden;flex-shrink:0;
+}
+.sb-club::before{content:'';position:absolute;top:-25px;right:-25px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.09)}
+.sb-club::after{content:'';position:absolute;bottom:-20px;left:-10px;width:70px;height:70px;border-radius:50%;background:rgba(249,115,22,.14)}
+.sb-club-title{font-family:'Poppins',sans-serif;font-size:13px;font-weight:800;color:#fff;line-height:1.3;margin-bottom:4px;position:relative;z-index:1}
+.sb-club-sub{font-size:10.5px;color:rgba(255,255,255,.68);line-height:1.45;margin-bottom:12px;position:relative;z-index:1}
+.sb-club-btn{background:#f97316;color:#fff;border:none;border-radius:8px;padding:7px 14px;font-size:11.5px;font-weight:700;cursor:pointer;position:relative;z-index:1;transition:background .2s}
+.sb-club-btn:hover{background:#ea6c10}
+.sb-club-img{position:absolute;right:-6px;bottom:-14px;font-size:64px;opacity:.14;transform:rotate(-10deg);z-index:0}
+
+/* Mode pill */
+.sb-mode-pill{
+  margin:0 10px 8px;padding:9px 12px;
+  border-radius:10px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.07);
+  display:flex;align-items:center;gap:9px;
+  cursor:pointer;transition:background .15s;flex-shrink:0;
+}
+.sb-mode-pill:hover{background:rgba(255,255,255,.08)}
+.sb-mode-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);transition:background .35s;flex-shrink:0;box-shadow:0 0 0 2px rgba(var(--accent-rgb),.25)}
+.sb-mode-lbl{font-size:9.5px;color:rgba(255,255,255,.38);display:block;line-height:1}
+.sb-mode-val{font-size:12px;font-weight:700;color:#fff;display:block;line-height:1.4;transition:all .3s}
+
+/* Streak */
+.sb-streak{margin:0 10px 10px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:12px;flex-shrink:0}
+.sb-streak-title{font-size:12.5px;font-weight:800;color:#111827;margin-bottom:2px;display:flex;align-items:center;gap:5px}
+.sb-streak-sub{font-size:10px;color:#6b7280;margin-bottom:9px}
+.streak-dots{display:flex;gap:4px}
+.sd{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:8.5px;font-weight:700;transition:all .2s}
+.sd.done{background:#7c3aed;color:#fff}
+.sd.today{background:#f97316;color:#fff}
+.sd.up{background:#e5e7eb;color:#9ca3af}
+.streak-lbl{display:flex;gap:4px;margin-top:3px}
+.streak-lbl span{width:22px;text-align:center;font-size:8.5px;color:#9ca3af;font-weight:600}
+
+/* Secure badge */
+.sb-secure{
+  margin:0 10px 14px;
+  display:flex;align-items:center;gap:8px;
+  padding:9px 11px;border-radius:10px;
+  background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);
+  flex-shrink:0;
+}
+.sb-secure i{color:#22c55e;font-size:15px;flex-shrink:0}
+.sb-secure-text b{font-size:11.5px;font-weight:700;color:#fff;display:block;line-height:1.2}
+.sb-secure-text small{font-size:9.5px;color:rgba(255,255,255,.38)}
+
+/* Edge toggle */
+.sb-edge{
+  position:fixed;top:50%;z-index:501;
+  width:20px;height:52px;
+  background:var(--accent);border:none;cursor:pointer;
+  border-radius:0 10px 10px 0;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:10px;
+  transition:left .32s cubic-bezier(.4,0,.2,1),background .2s;
+  box-shadow:3px 0 12px rgba(var(--accent-rgb),.35);
+  transform:translateY(-50%);
+  left:var(--sb-w);
+}
+.sb-edge:hover{background:#6d28d9}
+.sb-edge.at-zero{left:0}
+
+/* ════════════════════════════════════════════
+   MAIN
+════════════════════════════════════════════ */
+.main{
+  margin-left:var(--sb-w);flex:1;
+  display:flex;flex-direction:column;
+  min-height:100vh;
+  transition:margin-left .32s cubic-bezier(.4,0,.2,1);
+}
+.main.full{margin-left:0}
+
+/* ════════════════════════════════════════════
+   TOPBAR
+════════════════════════════════════════════ */
+.topbar{
+  background:#fff;
+  border-bottom:1px solid var(--border);
+  height:56px;padding:0 20px;
+  display:flex;align-items:center;gap:10px;
+  position:sticky;top:0;z-index:400;
+  box-shadow:0 1px 4px rgba(0,0,0,.05);
+}
+.mob-toggle{display:none;background:none;border:none;font-size:20px;color:var(--text);cursor:pointer;padding:6px;flex-shrink:0}
+.desk-toggle{
+  width:36px;height:36px;border-radius:9px;
+  background:none;border:1.5px solid var(--border);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;color:var(--muted);font-size:14px;
+  transition:all .18s;flex-shrink:0;
+}
+.desk-toggle:hover{background:#f5f3ff;border-color:var(--accent);color:var(--accent)}
+
+/* Search */
+.search-wrap{flex:1;max-width:480px;position:relative}
+.search-wrap input{
+  width:100%;height:38px;
+  padding:0 44px 0 40px;
+  border:1.5px solid var(--border);border-radius:10px;
+  font-size:13px;background:#fafafa;color:var(--text);
+  transition:all .2s;
+}
+.search-wrap input:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3px rgba(var(--accent-rgb),.1)}
+.search-wrap input::placeholder{color:#9ca3af}
+.search-wrap .s-left{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:#9ca3af;font-size:13px;pointer-events:none}
+.search-wrap .s-right{
+  position:absolute;right:5px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:7px;
+  background:var(--accent);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:11px;transition:background .18s;
+}
+.search-wrap .s-right:hover{background:#6d28d9}
+
+/* Reader Mode Button */
+.rm-wrap{position:relative;flex-shrink:0}
+.rm-btn{
+  display:flex;align-items:center;gap:8px;
+  height:38px;padding:0 12px;
+  border:1.5px solid var(--border);border-radius:10px;
+  background:#fff;cursor:pointer;
+  transition:border-color .2s;min-width:164px;
+}
+.rm-btn:hover,.rm-btn.open{border-color:var(--accent)}
+.rm-globe{
+  width:26px;height:26px;border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;transition:background .35s;
+}
+.rm-globe i{color:#fff;font-size:12px}
+.rm-labels{flex:1;text-align:left;line-height:1;min-width:0}
+.rm-small{font-size:9.5px;color:#9ca3af;display:block;margin-bottom:1px}
+.rm-big{font-size:13px;font-weight:700;color:var(--navy);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .3s}
+.rm-caret{color:#9ca3af;font-size:10px;transition:transform .2s;flex-shrink:0}
+.rm-btn.open .rm-caret{transform:rotate(180deg)}
+
+/* Dropdown */
+.rm-drop{
+  display:none;position:absolute;
+  top:calc(100% + 8px);left:0;
+  background:#fff;border:1px solid var(--border);
+  border-radius:16px;min-width:308px;
+  z-index:600;
+  box-shadow:0 14px 40px rgba(0,0,0,.13),0 4px 12px rgba(0,0,0,.07);
+  padding:8px;
+}
+.rm-drop.open{display:block;animation:fadeUp .18s ease}
+.rm-opt{
+  display:flex;align-items:center;gap:11px;
+  padding:10px 11px;border-radius:11px;
+  cursor:pointer;transition:background .15s;
+  position:relative;
+}
+.rm-opt:hover{background:#f5f3ff}
+.rm-opt.sel{background:#f5f3ff}
+.rm-opt-ico{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.rm-opt-text{flex:1;min-width:0}
+.rm-opt-text b{font-size:13px;font-weight:700;color:var(--navy);display:block;line-height:1.25}
+.rm-opt-text span{font-size:10.5px;color:var(--muted)}
+.rm-rec{background:#7c3aed;color:#fff;font-size:9.5px;font-weight:700;padding:2px 8px;border-radius:20px;white-space:nowrap;flex-shrink:0}
+.rm-ck{color:#16a34a;font-size:14px;display:none;flex-shrink:0}
+.rm-ck.on{display:block}
+.rm-divider{height:1px;background:#e5e7eb;margin:5px 0}
+.rm-manage{display:flex;align-items:center;gap:9px;padding:9px 11px;border-radius:10px;cursor:pointer;color:#6b7280;font-size:12.5px;font-weight:500;transition:background .15s}
+.rm-manage:hover{background:#f5f5f8}
+.rm-manage i{font-size:13px}
+
+/* Topbar Right */
+.tbr{display:flex;align-items:center;gap:2px;margin-left:auto}
+.tbb{
+  display:flex;align-items:center;gap:5px;
+  padding:6px 9px;border-radius:9px;
+  font-size:13px;font-weight:500;color:var(--text);
+  cursor:pointer;transition:background .15s;
+  background:none;border:none;position:relative;
+}
+.tbb:hover{background:#f5f5f8}
+.tbb i{font-size:16px;color:#9ca3af}
+.tbd{
+  position:absolute;top:3px;right:3px;
+  background:var(--accent);color:#fff;
+  font-size:8.5px;font-weight:800;
+  min-width:15px;height:15px;border-radius:20px;
+  display:flex;align-items:center;justify-content:center;
+  padding:0 3px;line-height:1;
+}
+.tbd.or{background:#f97316}
+.user-chip{
+  display:flex;align-items:center;gap:8px;
+  padding:5px 8px;border-radius:10px;
+  cursor:pointer;background:none;border:none;
+  transition:background .15s;margin-left:2px;
+}
+.user-chip:hover{background:#f5f5f8}
+.u-av{
+  width:34px;height:34px;border-radius:50%;
+  background:linear-gradient(135deg,#f97316,#e91e8c);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-weight:700;font-size:14px;flex-shrink:0;
+}
+.u-info b{font-size:13px;font-weight:700;color:var(--navy);display:block;line-height:1.2}
+.u-info small{font-size:10.5px;color:var(--muted)}
+.u-caret{color:#9ca3af;font-size:10px;margin-left:2px}
+
+/* ════════════════════════════════════════════
+   CONTENT
+════════════════════════════════════════════ */
+.content{padding:18px 20px 40px}
+
+/* ════════════════════════════════════════════
+   MODE BANNER
+════════════════════════════════════════════ */
+.mode-banner{
+  border-radius:14px;padding:13px 18px;margin-bottom:16px;
+  display:flex;align-items:center;gap:12px;
+  transition:background .4s,color .4s;
+}
+.mb-icon{font-size:28px;line-height:1;flex-shrink:0}
+.mb-body{flex:1;min-width:0}
+.mb-title{font-size:14px;font-weight:800;display:block;line-height:1.3;margin-bottom:1px}
+.mb-sub{font-size:11.5px;opacity:.72}
+.mb-badge{
+  margin-left:auto;flex-shrink:0;
+  padding:5px 14px;border-radius:20px;
+  font-size:11px;font-weight:700;white-space:nowrap;
+}
+
+/* ════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════ */
+.hero-grid{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:16px}
+
+.hero-main{
+  border-radius:18px;overflow:hidden;
+  position:relative;display:flex;flex-direction:column;
+  transition:background .4s;
+}
+.hero-body{
+  flex:1;display:flex;padding:26px 28px 0;
+  position:relative;overflow:hidden;min-height:248px;
+}
+.hero-text{flex:1;z-index:2;padding-bottom:22px;max-width:390px}
+.h-greet{font-size:13px;color:var(--muted);font-weight:500;margin-bottom:10px;display:flex;align-items:center;gap:5px}
+.h1{
+  font-family:'Poppins',sans-serif;
+  font-size:30px;font-weight:800;
+  color:var(--navy);line-height:1.2;margin-bottom:11px;
+}
+.h1 .ac{transition:color .35s}
+.h-sub{font-size:13.5px;color:#6b7280;line-height:1.62;margin-bottom:24px;max-width:360px}
+.h-btns{display:flex;gap:10px;flex-wrap:wrap}
+.btn-p{
+  color:#fff;padding:11px 22px;border-radius:11px;
+  font-size:13.5px;font-weight:700;border:none;cursor:pointer;
+  display:flex;align-items:center;gap:7px;
+  transition:all .2s;flex-shrink:0;
+}
+.btn-p:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-s{
+  background:#fff;color:var(--navy);
+  padding:11px 20px;border-radius:11px;
+  font-size:13.5px;font-weight:600;
+  border:1.5px solid #e5e7eb;cursor:pointer;
+  transition:all .2s;flex-shrink:0;
+}
+.btn-s:hover{border-color:var(--accent);color:var(--accent)}
+
+/* Hero visual */
+.h-visual{
+  position:absolute;right:0;top:0;bottom:0;
+  width:46%;display:flex;align-items:flex-end;
+  justify-content:center;pointer-events:none;overflow:hidden;
+}
+.h-scene{position:relative;width:100%;height:100%;display:flex;align-items:flex-end;justify-content:center;padding-bottom:8px}
+.hb{position:absolute;border-radius:9px;box-shadow:0 8px 28px rgba(0,0,0,.26);overflow:hidden;display:flex;align-items:center;justify-content:center;transition:background .4s}
+.hbi{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px;gap:5px}
+.hbt{font-size:10px;font-weight:800;text-align:center;line-height:1.2}
+.hba{font-size:8px;opacity:.68;text-align:center}
+.hb1{width:82px;height:118px;bottom:14px;left:18%;animation:float1 3.8s ease-in-out infinite alternate;z-index:2}
+.hb2{width:76px;height:110px;bottom:30px;left:36%;animation:float2 4.2s ease-in-out infinite alternate;z-index:3}
+.hb3{width:80px;height:114px;bottom:20px;right:12%;animation:float3 3.5s ease-in-out infinite alternate;z-index:2}
+.h-deco{position:absolute;pointer-events:none;z-index:4}
+.hd1{top:18px;right:29%;font-size:26px;animation:spinSlow 8s linear infinite}
+.hd2{bottom:62px;right:7%;font-size:20px;animation:spinSlow 10s linear infinite reverse}
+.hd3{top:28px;right:11%;font-size:16px;animation:float2 2.8s ease-in-out infinite alternate}
+.h-gift{
+  bottom:36px;left:25%;background:#fff;border-radius:11px;
+  padding:5px 10px;box-shadow:0 4px 16px rgba(0,0,0,.14);
+  font-size:11px;font-weight:700;
+  display:flex;align-items:center;gap:4px;
+  animation:float1 3s ease-in-out infinite alternate;z-index:5;
+  transition:color .35s;
+}
+.h-wm{position:absolute;bottom:12px;right:12px;font-family:'Poppins',sans-serif;font-size:12px;font-weight:800;color:rgba(0,0,0,.06);letter-spacing:1px}
+
+/* Hero features strip */
+.h-feats{
+  display:flex;gap:20px;
+  padding:13px 28px;
+  border-top:1px solid rgba(0,0,0,.06);
+  background:rgba(255,255,255,.6);
+  flex-wrap:wrap;
+}
+.hf{display:flex;align-items:center;gap:8px}
+.hf-icon{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0}
+.hf-text{font-size:11.5px;color:#374151;font-weight:600;line-height:1.35}
+
+/* ════════════════════════════════════════════
+   SURPRISE ME CARD
+════════════════════════════════════════════ */
+.smc{
+  border-radius:18px;
+  background:linear-gradient(158deg,#0d0a2c 0%,#1a0e4a 40%,#2d1370 100%);
+  padding:22px 20px;
+  display:flex;flex-direction:column;
+  position:relative;overflow:hidden;
+}
+.smc::before{content:'';position:absolute;top:-35px;right:-35px;width:110px;height:110px;border-radius:50%;background:rgba(167,139,250,.18)}
+.smc::after{content:'';position:absolute;bottom:-28px;left:-18px;width:85px;height:85px;border-radius:50%;background:rgba(249,115,22,.13)}
+.smc-sp{font-size:16px;margin-bottom:9px;position:relative;z-index:1;color:#c4b5fd}
+.smc-title{font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:#fff;margin-bottom:7px;line-height:1.25;position:relative;z-index:1}
+.smc-desc{font-size:12px;color:rgba(255,255,255,.6);line-height:1.56;margin-bottom:14px;position:relative;z-index:1;flex:1}
+.smc-hearts{position:absolute;right:16px;top:88px;font-size:13px;z-index:1;opacity:.38;line-height:2.2}
+/* Gift box 3D */
+.gbox-wrap{position:relative;z-index:1;text-align:center;margin-bottom:14px;height:104px;display:flex;align-items:center;justify-content:center}
+.g3d{position:relative;display:inline-block;animation:float2 3s ease-in-out infinite alternate}
+.g-lid{width:80px;height:22px;background:linear-gradient(145deg,#f472b6,#ec4899);border-radius:5px 5px 2px 2px;position:absolute;top:-22px;left:-4px;box-shadow:0 -3px 10px rgba(236,72,153,.3)}
+.g-lid-r{position:absolute;top:0;bottom:0;left:50%;width:10px;background:linear-gradient(180deg,#fde68a,#fbbf24);transform:translateX(-50%);border-radius:2px}
+.g-bow{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:18px;line-height:1}
+.g-body{width:72px;height:60px;background:linear-gradient(145deg,#ec4899,#db2777);border-radius:6px 6px 8px 8px;position:relative;box-shadow:0 8px 20px rgba(236,72,153,.4),inset 0 -3px 0 rgba(0,0,0,.12)}
+.g-rh{position:absolute;top:50%;left:0;right:0;height:10px;background:linear-gradient(90deg,#fde68a,#fbbf24,#fde68a);transform:translateY(-50%);border-radius:2px}
+.g-rv{position:absolute;top:0;bottom:0;left:50%;width:10px;background:linear-gradient(180deg,#fde68a,#fbbf24);transform:translateX(-50%);border-radius:2px}
+.g-peek{position:absolute;top:-8px;left:50%;transform:translateX(-50%);font-size:10px}
+.g-star{position:absolute;top:-30px;right:-20px;font-size:12px;animation:float1 2s ease-in-out infinite alternate}
+.g-h1{position:absolute;top:-10px;left:-22px;font-size:14px;animation:float3 2.5s ease-in-out infinite alternate}
+.g-h2{position:absolute;bottom:-5px;right:-20px;font-size:11px;animation:float2 2s ease-in-out infinite alternate}
+.smc-btn{
+  background:linear-gradient(135deg,#7c3aed,#a855f7);
+  color:#fff;padding:13px;border-radius:12px;
+  font-size:14.5px;font-weight:700;border:none;cursor:pointer;
+  width:100%;position:relative;z-index:1;
+  transition:all .2s;box-shadow:0 4px 14px rgba(124,58,237,.4);
+}
+.smc-btn:hover{opacity:.92;transform:translateY(-1px)}
+.smc-soc{margin-top:10px;display:flex;align-items:center;gap:8px;position:relative;z-index:1}
+.smc-avs{display:flex}
+.smc-av{width:22px;height:22px;border-radius:50%;border:2px solid #1a0a3c;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:800;color:#fff;margin-left:-5px}
+.smc-av:first-child{margin-left:0}
+.smc-soc-txt{font-size:10px;color:rgba(255,255,255,.48)}
+
+/* ════════════════════════════════════════════
+   SECTION HEADERS
+════════════════════════════════════════════ */
+.sec-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sec-title{font-family:'Poppins',sans-serif;font-size:16.5px;font-weight:800;color:var(--navy);display:flex;align-items:center;gap:7px}
+.sec-title.sm{font-size:14px}
+.view-all{font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:color .15s}
+.view-all:hover{color:var(--accent)}
+.nav-arrows{display:flex;gap:5px}
+.na{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--muted);cursor:pointer;transition:all .18s}
+.na:hover{border-color:var(--accent);color:var(--accent);background:#f5f3ff}
+
+/* ════════════════════════════════════════════
+   TRENDING + GIFTS ROW
+════════════════════════════════════════════ */
+.trend-row{display:grid;grid-template-columns:1fr 300px;gap:14px;margin-bottom:16px;align-items:start}
+
+/* Book scroll */
+.book-scroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:4px;scroll-behavior:smooth}
+.book-scroll::-webkit-scrollbar{display:none}
+
+/* Book Card */
+.bk{flex:0 0 128px;cursor:pointer}
+.bk-cover{position:relative;border-radius:12px;overflow:hidden;height:170px;margin-bottom:9px;transition:transform .22s,box-shadow .22s;box-shadow:0 3px 14px rgba(0,0,0,.14)}
+.bk:hover .bk-cover{transform:translateY(-4px);box-shadow:0 10px 28px rgba(0,0,0,.2)}
+.bk-inner{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:10px;gap:6px}
+.bk-emoji{font-size:36px;line-height:1}
+.bk-ct{font-size:11px;font-weight:800;text-align:center;line-height:1.25}
+.bk-ca{font-size:9px;text-align:center;opacity:.65}
+.bk-rating{position:absolute;bottom:7px;left:7px;background:rgba(0,0,0,.72);color:#fbbf24;font-size:9.5px;font-weight:700;padding:2px 6px;border-radius:5px;display:flex;align-items:center;gap:2px}
+.bk-cart{position:absolute;bottom:7px;right:7px;width:26px;height:26px;border-radius:7px;background:#fff;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:11px;border:none;cursor:pointer;box-shadow:0 1px 5px rgba(0,0,0,.13);transition:all .18s}
+.bk-cart:hover{background:var(--accent);color:#fff}
+.bk-title{font-size:12px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:1px}
+.bk-author{font-size:10px;color:var(--muted);margin-bottom:4px}
+.bk-stars{color:#f59e0b;font-size:9.5px;display:flex;align-items:center;gap:2px;margin-bottom:4px}
+.bk-stars span{color:var(--muted)}
+.bk-price-row{display:flex;align-items:center;justify-content:space-between}
+.bk-price{font-size:14px;font-weight:800;color:var(--navy)}
+.bk-add{width:24px;height:24px;border-radius:6px;background:#f0f0f6;color:var(--muted);font-size:11px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:all .18s}
+.bk-add:hover{background:var(--accent);color:#fff}
+
+/* Gift Card */
+.gift-card{background:#fff;border-radius:18px;padding:20px;box-shadow:var(--shadow)}
+.gift-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px;margin-top:4px}
+.gift-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 5px;border-radius:11px;cursor:pointer;transition:all .18s;border:1.5px solid transparent}
+.gift-item:hover{border-color:#ddd6fe;background:#f5f3ff}
+.gift-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.gift-label{font-size:10.5px;font-weight:700;color:var(--navy);text-align:center;line-height:1.3}
+
+/* ════════════════════════════════════════════
+   FIVE COLUMNS
+════════════════════════════════════════════ */
+.five-col{display:grid;grid-template-columns:repeat(5,1fr);gap:13px;margin-bottom:16px}
+.wb{background:#fff;border-radius:16px;padding:16px;box-shadow:var(--shadow)}
+
+/* Mood grid */
+.mood-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:4px}
+.mood-item{display:flex;flex-direction:column;align-items:center;gap:5px;padding:10px 6px;border-radius:11px;cursor:pointer;transition:all .18s;border:1.5px solid transparent}
+.mood-item:hover{border-color:#ddd6fe;background:#f5f3ff}
+.mood-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.mood-label{font-size:10.5px;font-weight:700;color:var(--navy);text-align:center;line-height:1.3}
+
+/* Community */
+.comm-head{display:flex;align-items:center;gap:9px;margin-bottom:8px;margin-top:4px}
+.comm-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+.comm-name{font-size:12.5px;font-weight:700;color:var(--navy)}
+.comm-handle{font-size:10px;color:var(--muted)}
+.comm-time{font-size:10px;color:var(--muted);margin-left:auto;white-space:nowrap}
+.comm-text{font-size:12.5px;color:var(--text);line-height:1.5;margin-bottom:9px}
+.comm-media{border-radius:11px;height:110px;margin-bottom:9px;display:flex;align-items:center;justify-content:center;font-size:40px;overflow:hidden;position:relative}
+.comm-actions{display:flex;align-items:center;gap:12px;font-size:12.5px;color:var(--muted)}
+.comm-act{display:flex;align-items:center;gap:3.5px;cursor:pointer;font-weight:600;transition:color .15s}
+.comm-act:hover,.comm-act.liked{color:#f43f8e}
+.comm-bm{margin-left:auto;cursor:pointer;color:var(--muted);font-size:14px;transition:color .15s}
+.comm-bm:hover{color:var(--accent)}
+
+/* Videos */
+.vid-list{display:flex;flex-direction:column;gap:9px;margin-top:4px}
+.vid-item{cursor:pointer}
+.vid-thumb{border-radius:11px;height:82px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;transition:transform .18s;font-size:28px}
+.vid-item:hover .vid-thumb{transform:scale(1.02)}
+.vid-overlay{position:absolute;inset:0;background:rgba(0,0,0,.3);display:flex;align-items:center;justify-content:center}
+.vid-play{width:32px;height:32px;background:rgba(255,255,255,.92);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--accent);font-size:11px;padding-left:2px}
+.vid-dur{position:absolute;bottom:6px;left:7px;background:rgba(0,0,0,.72);color:#fff;font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px}
+.vid-desc{font-size:11.5px;font-weight:700;color:var(--navy);line-height:1.3;margin-top:4px}
+.vid-who{font-size:10px;color:var(--muted)}
+
+/* Nearby */
+.near-list{display:flex;flex-direction:column;gap:10px;margin-top:4px}
+.near-row{display:flex;align-items:center;gap:8px}
+.near-av{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:13px;flex-shrink:0}
+.near-info{flex:1;min-width:0}
+.near-name{font-size:12.5px;font-weight:700;color:var(--navy);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.near-dist{font-size:10px;color:var(--muted)}
+.near-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:5px;flex-shrink:0;white-space:nowrap}
+.near-badge.seller{background:#dcfce7;color:#166534}
+.near-badge.reader{background:#dbeafe;color:#1e40af}
+.near-books{font-size:10px;color:var(--muted);flex-shrink:0;white-space:nowrap}
+.near-chat{width:28px;height:28px;border-radius:7px;border:1.5px solid var(--border);background:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--muted);cursor:pointer;transition:all .18s;flex-shrink:0}
+.near-chat:hover{border-color:var(--accent);color:var(--accent);background:#f5f3ff}
+
+/* Popular */
+.pop-tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
+.pop-tag{font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;cursor:pointer;transition:opacity .15s;user-select:none}
+.pop-tag:hover{opacity:.8}
+.pop-books{display:flex;gap:10px;overflow-x:auto}
+.pop-books::-webkit-scrollbar{display:none}
+.pop-bk{flex:0 0 92px;cursor:pointer}
+.pop-cover{border-radius:10px;height:124px;display:flex;align-items:center;justify-content:center;font-size:30px;margin-bottom:7px;box-shadow:0 2px 10px rgba(0,0,0,.12);transition:transform .18s;overflow:hidden}
+.pop-cover:hover{transform:translateY(-3px)}
+.pop-title{font-size:11px;font-weight:700;color:var(--navy);line-height:1.3;margin-bottom:1px}
+.pop-author{font-size:9.5px;color:var(--muted);margin-bottom:3px}
+.pop-rating{color:#f59e0b;font-size:9.5px;margin-bottom:4px}
+.pop-pr{display:flex;align-items:center;justify-content:space-between}
+.pop-price{font-size:12px;font-weight:800;color:var(--navy)}
+.pop-add{width:20px;height:20px;border-radius:5px;background:#f0f0f6;color:var(--muted);font-size:10px;display:flex;align-items:center;justify-content:center;border:none;cursor:pointer;transition:all .18s}
+.pop-add:hover{background:var(--accent);color:#fff}
+
+/* ════════════════════════════════════════════
+   TRUST + JOIN
+════════════════════════════════════════════ */
+.trust-strip{
+  background:#fff;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-around;
+  flex-wrap:wrap;gap:12px;
+  border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border);
+}
+.trust-item{display:flex;align-items:center;gap:9px}
+.trust-ico{font-size:20px;color:#9ca3af}
+.trust-text b{font-size:12.5px;font-weight:700;color:var(--navy);display:block}
+.trust-text small{font-size:10px;color:var(--muted)}
+.join-bar{
+  background:linear-gradient(135deg,#4c1d95,#6d28d9,#7c3aed);
+  padding:14px 22px;
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.jb-left{display:flex;align-items:center;gap:12px}
+.jb-avs{display:flex}
+.jb-av{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.3);margin-left:-7px;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff}
+.jb-av:first-child{margin-left:0}
+.jb-text b{font-size:13.5px;font-weight:700;color:#fff;display:block}
+.jb-text small{font-size:11px;color:rgba(255,255,255,.65)}
+.jb-btn{background:#fff;color:#7c3aed;padding:10px 20px;border-radius:10px;font-size:13px;font-weight:700;border:none;cursor:pointer;transition:background .2s;white-space:nowrap}
+.jb-btn:hover{background:#f5f3ff}
+
+/* ════════════════════════════════════════════
+   QUIZ MODAL
+════════════════════════════════════════════ */
+.quiz-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:800;align-items:center;justify-content:center;padding:16px}
+.quiz-ov.open{display:flex}
+.quiz-box{background:#fff;border-radius:22px;width:100%;max-width:440px;padding:26px;position:relative;animation:fadeUp .28s ease}
+.quiz-close{position:absolute;top:14px;right:14px;background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer}
+.quiz-step{font-size:11px;color:var(--muted);text-align:right;margin-bottom:5px}
+.quiz-prog{height:5px;background:#f0f0f5;border-radius:3px;margin-bottom:18px;overflow:hidden}
+.quiz-fill{height:100%;background:linear-gradient(90deg,var(--accent),#f43f8e);border-radius:3px;transition:width .4s ease}
+.quiz-title{font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:var(--navy);margin-bottom:4px}
+.quiz-desc{font-size:12.5px;color:var(--muted);margin-bottom:16px}
+.quiz-opts{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.quiz-opt{border:2px solid var(--border);border-radius:12px;padding:13px 10px;cursor:pointer;text-align:center;font-size:13px;font-weight:600;color:var(--text);transition:all .18s}
+.quiz-opt:hover,.quiz-opt.sel{border-color:var(--accent);background:#f5f3ff;color:var(--accent)}
+.quiz-emoji{font-size:24px;display:block;margin-bottom:5px}
+.quiz-next{width:100%;padding:12px;background:var(--accent);color:#fff;border:none;border-radius:12px;font-size:14.5px;font-weight:700;cursor:pointer;margin-top:14px;transition:background .2s}
+.quiz-next:hover{background:#6d28d9}
+
+/* Overlays & Toast */
+.sb-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:490}
+.sb-ov.open{display:block}
+#toast-wrap{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px;pointer-events:none}
+.toast{background:#1a1d2e;color:#fff;padding:11px 17px;border-radius:11px;font-size:13px;font-weight:600;box-shadow:0 4px 18px rgba(0,0,0,.22);opacity:0;transform:translateY(10px);transition:all .28s;max-width:280px}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════════ */
+@media(max-width:1440px){.five-col{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:1280px){.five-col{grid-template-columns:repeat(2,1fr)}.trend-row{grid-template-columns:1fr}}
+@media(max-width:1060px){.hero-grid{grid-template-columns:1fr}.h-visual{display:none}}
+@media(max-width:840px){
+  .sidebar{transform:translateX(-100%)}.sidebar.mob-open{transform:translateX(0)}
+  .main{margin-left:0 !important}
+  .mob-toggle{display:flex}.desk-toggle,.sb-edge{display:none}
+  .content{padding:12px 12px 32px}
+  .topbar{padding:0 12px;gap:8px}
+  .search-wrap{max-width:200px}
+  .rm-btn{min-width:130px}
+  .u-info{display:none}
+  .tbb span:not(.tbd){display:none}
+}
+@media(max-width:600px){
+  .five-col{grid-template-columns:1fr}
+  .h1{font-size:24px}.h-feats{gap:12px}
+  .hero-grid,.trend-row{grid-template-columns:1fr}
+  .trust-strip{justify-content:flex-start;gap:16px}
+  .join-bar{flex-direction:column;align-items:flex-start}
+}
+@media(max-width:420px){
+  .quiz-opts{grid-template-columns:1fr}
+  .rm-btn{display:none}
+}
+</style>
+</head>
+<body>
+
+<!-- QUIZ MODAL -->
+<div class="quiz-ov" id="quizOv">
+  <div class="quiz-box">
+    <button class="quiz-close" onclick="closeQuiz()"><i class="fa fa-times"></i></button>
+    <div class="quiz-step" id="quizStep">Step 1 of 4</div>
+    <div class="quiz-prog"><div class="quiz-fill" id="quizFill" style="width:25%"></div></div>
+    <div class="quiz-title" id="quizTitle"></div>
+    <div class="quiz-desc" id="quizDesc"></div>
+    <div class="quiz-opts" id="quizOpts"></div>
+    <button class="quiz-next" id="quizNext" onclick="quizNext()">Next →</button>
+  </div>
+</div>
+
+<div class="sb-ov" id="sbOv" onclick="closeSb()"></div>
+
+<div class="layout">
+
+<!-- ════════ SIDEBAR ════════ -->
+<aside class="sidebar" id="sidebar">
+  <div class="sb-logo">
+    <svg class="sb-logo-svg" viewBox="0 0 42 42" fill="none">
+      <rect width="42" height="42" rx="10" fill="#f97316"/>
+      <path d="M7 34V13C7 11.9 7.9 11 9 11H17.5C21 11 23.8 12.8 25.5 14.5C27.2 12.8 30 11 33.5 11C34.6 11 35.5 11.9 35.5 13V34" stroke="white" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M25.5 14.5V34" stroke="white" stroke-width="1.8" stroke-linecap="round" opacity=".6" stroke-dasharray="2.5 2.5"/>
+      <path d="M7 34H35.5" stroke="white" stroke-width="2.4" stroke-linecap="round"/>
+    </svg>
+    <div>
+      <span class="sb-logo-name">Book<em>Nest</em></span>
+      <span class="sb-logo-tag">Find books. Feel stories. Grow every day.</span>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sbi active"><i class="fa fa-house"></i>Home</div>
+    <div class="sbi" onclick="toast('Buy Books 📖')"><i class="fa fa-book-open"></i>Buy Books</div>
+    <div class="sbi" onclick="toast('Sell Books 🏷️')"><i class="fa fa-tag"></i>Sell Books</div>
+    <div class="sbi" onclick="toast('Exchange 🔄')"><i class="fa fa-arrows-rotate"></i>Exchange</div>
+    <div class="sbi" onclick="openQuiz()"><i class="fa fa-wand-magic-sparkles"></i>Surprise Me</div>
+    <div class="sbi" onclick="toast('Gift Books 🎁')"><i class="fa fa-gift"></i>Gift Books</div>
+    <div class="sbi" onclick="toast('Community 👥')"><i class="fa fa-users"></i>Community</div>
+    <div class="sbi" onclick="toast('eBooks 📱')"><i class="fa fa-tablet-screen-button"></i>eBooks</div>
+    <div class="sbi" onclick="toast('Audiobooks 🎧')"><i class="fa fa-headphones"></i>Audiobooks</div>
+    <div class="sbi" onclick="toast('Vedas & Wisdom 🕉️')"><i class="fa fa-om"></i>Vedas &amp; Wisdom</div>
+    <div class="sbi" onclick="toast('AI Assistant 🤖')"><i class="fa fa-robot"></i>AI Assistant<span class="nbadge">New</span></div>
+  </nav>
+
+  <div class="sb-club">
+    <div class="sb-club-title">BookNest<br>Reader Club</div>
+    <div class="sb-club-sub">Exclusive rewards, early access &amp; more!</div>
+    <button class="sb-club-btn" onclick="toast('Joining Reader Club! 🎉','#059669')">Join Now 👑</button>
+    <div class="sb-club-img">📚</div>
+  </div>
+
+  <div class="sb-mode-pill" onclick="toggleDrop()">
+    <div class="sb-mode-dot" id="sbDot"></div>
+    <div>
+      <span class="sb-mode-lbl">Current Mode</span>
+      <span class="sb-mode-val" id="sbModeVal">General Mode</span>
+    </div>
+    <i class="fa fa-chevron-right" style="color:rgba(255,255,255,.3);font-size:10px;margin-left:auto"></i>
+  </div>
+
+  <div class="sb-streak">
+    <div class="sb-streak-title">Your Reading Streak 🔥</div>
+    <div class="sb-streak-sub">7 days in a row!</div>
+    <div class="streak-dots">
+      <div class="sd done"><i class="fa fa-check" style="font-size:8px"></i></div>
+      <div class="sd done"><i class="fa fa-check" style="font-size:8px"></i></div>
+      <div class="sd done"><i class="fa fa-check" style="font-size:8px"></i></div>
+      <div class="sd done"><i class="fa fa-check" style="font-size:8px"></i></div>
+      <div class="sd done"><i class="fa fa-check" style="font-size:8px"></i></div>
+      <div class="sd today" style="font-size:9px;font-weight:800">F</div>
+      <div class="sd up" style="font-size:9px">S</div>
+    </div>
+    <div class="streak-lbl">
+      <span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span>
+    </div>
+  </div>
+
+  <div class="sb-secure">
+    <i class="fa fa-shield-halved"></i>
+    <div class="sb-secure-text">
+      <b>Secure Payments</b>
+      <small>100% safe &amp; trusted</small>
+    </div>
+  </div>
+</aside>
+
+<button class="sb-edge" id="sbEdge" onclick="toggleSb()">
+  <i class="fa fa-chevron-left" id="sbEdgeIco"></i>
+</button>
+
+<!-- ════════ MAIN ════════ -->
+<div class="main" id="mainEl">
+  <header class="topbar">
+    <button class="mob-toggle" onclick="toggleSb()"><i class="fa fa-bars"></i></button>
+    <button class="desk-toggle" onclick="toggleSb()"><i class="fa fa-bars"></i></button>
+
+    <div class="search-wrap">
+      <i class="fa fa-magnifying-glass s-left"></i>
+      <input type="text" id="searchInput" placeholder="Search by title, author, genre or keyword..." oninput="handleSearch(this.value)">
+      <button class="s-right"><i class="fa fa-magnifying-glass"></i></button>
+    </div>
+
+    <div class="rm-wrap">
+      <button class="rm-btn" id="rmBtn" onclick="toggleDrop()">
+        <div class="rm-globe" id="rmGlobe"><i class="fa fa-globe"></i></div>
+        <div class="rm-labels">
+          <span class="rm-small">Reader Mode</span>
+          <span class="rm-big" id="rmLabel">General Mode</span>
+        </div>
+        <i class="fa fa-chevron-down rm-caret"></i>
+      </button>
+      <div class="rm-drop" id="rmDrop">
+        <div class="rm-opt sel" id="rmO0" onclick="setMode(0)">
+          <div class="rm-opt-ico" style="background:#e0fce9">🌐</div>
+          <div class="rm-opt-text"><b>General Mode</b><span>All genres, all moods, all stories</span></div>
+          <span class="rm-rec">Recommended</span>
+          <i class="fa fa-check rm-ck on"></i>
+        </div>
+        <div class="rm-opt" id="rmO1" onclick="setMode(1)">
+          <div class="rm-opt-ico" style="background:#fce7f3">❤️</div>
+          <div class="rm-opt-text"><b>Romance Reader</b><span>Love, relationships &amp; emotions</span></div>
+          <i class="fa fa-check rm-ck"></i>
+        </div>
+        <div class="rm-opt" id="rmO2" onclick="setMode(2)">
+          <div class="rm-opt-ico" style="background:#ede9fe">🌙</div>
+          <div class="rm-opt-text"><b>Dark Romance Reader</b><span>Intense. Raw. Unfiltered.</span></div>
+          <i class="fa fa-check rm-ck"></i>
+        </div>
+        <div class="rm-opt" id="rmO3" onclick="setMode(3)">
+          <div class="rm-opt-ico" style="background:#dbeafe">🎓</div>
+          <div class="rm-opt-text"><b>Student Reader</b><span>Study, focus &amp; success</span></div>
+          <i class="fa fa-check rm-ck"></i>
+        </div>
+        <div class="rm-opt" id="rmO4" onclick="setMode(4)">
+          <div class="rm-opt-ico" style="background:#ffedd5">🙏</div>
+          <div class="rm-opt-text"><b>Spiritual Reader</b><span>Wisdom, peace &amp; purpose</span></div>
+          <i class="fa fa-check rm-ck"></i>
+        </div>
+        <div class="rm-divider"></div>
+        <div class="rm-manage" onclick="toast('Manage Preferences ⚙️')">
+          <i class="fa fa-gear"></i> Manage Preferences
+        </div>
+      </div>
+    </div>
+
+    <div class="tbr">
+      <button class="tbb" onclick="toast('Wishlist ❤️')">
+        <i class="fa fa-heart"></i><span>Wishlist</span>
+      </button>
+      <button class="tbb" onclick="toast('Cart 🛒')" style="position:relative">
+        <i class="fa fa-cart-shopping"></i><span>Cart</span>
+        <span class="tbd" id="cartBadge">2</span>
+      </button>
+      <button class="tbb" onclick="toast('1 new notification 🔔')" style="position:relative">
+        <i class="fa fa-bell"></i>
+        <span class="tbd or">1</span>
+      </button>
+      <button class="user-chip" onclick="toast('My Profile 👤')">
+        <div class="u-av">A</div>
+        <div class="u-info"><b>Hi, Ananya</b><small>Book Lover</small></div>
+        <i class="fa fa-chevron-down u-caret"></i>
+      </button>
+    </div>
+  </header>
+
+  <div class="content" id="content">
+
+    <!-- MODE BANNER -->
+    <div class="mode-banner" id="modeBanner"></div>
+
+    <!-- HERO -->
+    <div class="hero-grid">
+      <div class="hero-main" id="heroMain">
+        <div class="hero-body">
+          <div class="hero-text">
+            <div class="h-greet" id="heroGreet">Good Afternoon, Ananya! 👋</div>
+            <h1 class="h1" id="heroH1"></h1>
+            <p class="h-sub" id="heroSub"></p>
+            <div class="h-btns">
+              <button class="btn-p" id="heroBtnP" onclick="openQuiz()"></button>
+              <button class="btn-s" id="heroBtnS"></button>
+            </div>
+          </div>
+          <div class="h-visual">
+            <div class="h-scene" id="heroScene"></div>
+          </div>
+        </div>
+        <div class="h-feats" id="heroFeats"></div>
+      </div>
+
+      <!-- SURPRISE ME CARD -->
+      <div class="smc">
+        <div class="smc-sp">✦ ✦</div>
+        <h2 class="smc-title">Surprise Me Box 🎁</h2>
+        <p class="smc-desc">Answer a few fun questions and we'll create the perfect book box just for you.</p>
+        <div class="smc-hearts">❤️<br>💕<br>❤️<br>💕</div>
+        <div class="gbox-wrap">
+          <div class="g3d">
+            <div class="g-lid"><div class="g-lid-r"></div></div>
+            <div class="g-bow">🎀</div>
+            <div class="g-body">
+              <div class="g-rh"></div><div class="g-rv"></div>
+              <div class="g-peek">📚</div>
+            </div>
+            <div class="g-star">✨</div>
+            <div class="g-h1">💜</div>
+            <div class="g-h2">💕</div>
+          </div>
+        </div>
+        <button class="smc-btn" onclick="openQuiz()">Start Quiz →</button>
+        <div class="smc-soc">
+          <div class="smc-avs">
+            <div class="smc-av" style="background:linear-gradient(135deg,#f97316,#e91e8c)">A</div>
+            <div class="smc-av" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">S</div>
+            <div class="smc-av" style="background:linear-gradient(135deg,#10b981,#3b82f6)">K</div>
+            <div class="smc-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">R</div>
+          </div>
+          <span class="smc-soc-txt">Loved by 10,000+ happy readers</span>
+        </div>
+      </div>
+    </div><!-- /hero-grid -->
+
+    <!-- TRENDING + GIFTS -->
+    <div class="trend-row">
+      <div>
+        <div class="sec-hdr">
+          <div class="sec-title" id="trendTitle">Trending This Week 🔥</div>
+          <div style="display:flex;align-items:center;gap:8px">
+            <span class="view-all" onclick="toast('View all books')">View all</span>
+            <div class="nav-arrows">
+              <button class="na" onclick="scrollBks(-1)"><i class="fa fa-chevron-left"></i></button>
+              <button class="na" onclick="scrollBks(1)"><i class="fa fa-chevron-right"></i></button>
+            </div>
+          </div>
+        </div>
+        <div class="book-scroll" id="bookRow"></div>
+      </div>
+      <div class="gift-card">
+        <div class="sec-hdr">
+          <div class="sec-title sm" id="giftTitle">Gift Ideas for Every Occasion</div>
+          <span class="view-all" onclick="toast('View all gifts 🎁')">View all</span>
+        </div>
+        <div class="gift-grid" id="giftGrid"></div>
+      </div>
+    </div>
+
+    <!-- FIVE COLUMNS -->
+    <div class="five-col">
+      <div class="wb">
+        <div class="sec-hdr">
+          <div class="sec-title sm" id="moodTitle">Collections for Every Mood</div>
+          <span class="view-all" onclick="toast('View all moods')">View all</span>
+        </div>
+        <div class="mood-grid" id="moodGrid"></div>
+      </div>
+
+      <div class="wb">
+        <div class="sec-hdr">
+          <div class="sec-title sm">From Our Community</div>
+          <span class="view-all" onclick="toast('View all posts')">View all</span>
+        </div>
+        <div id="commPost"></div>
+      </div>
+
+      <div class="wb">
+        <div class="sec-hdr">
+          <div class="sec-title sm">Video Stories</div>
+          <span class="view-all" onclick="toast('View all videos')">View all</span>
+        </div>
+        <div class="vid-list" id="vidList"></div>
+      </div>
+
+      <div class="wb">
+        <div class="sec-hdr">
+          <div class="sec-title sm">Nearby Readers</div>
+          <span class="view-all" onclick="toast('View all nearby')">View all</span>
+        </div>
+        <div class="near-list" id="nearList"></div>
+      </div>
+
+      <div class="wb">
+        <div class="sec-hdr">
+          <div class="sec-title sm">Popular in Your Mode</div>
+          <span class="view-all" onclick="toast('View all popular')">View all</span>
+        </div>
+        <div class="pop-tags" id="popTags"></div>
+        <div class="pop-books" id="popBooks"></div>
+      </div>
+    </div><!-- /five-col -->
+
+    <!-- TRUST STRIP -->
+    <div class="trust-strip">
+      <div class="trust-item"><i class="trust-ico fa fa-shield-halved" style="color:#7c3aed"></i><div class="trust-text"><b>Secure Payments</b><small>100% safe &amp; trusted</small></div></div>
+      <div class="trust-item"><i class="trust-ico fa fa-truck-fast" style="color:#3b82f6"></i><div class="trust-text"><b>Fast Delivery</b><small>On time, every time</small></div></div>
+      <div class="trust-item"><i class="trust-ico fa fa-rotate-left" style="color:#16a34a"></i><div class="trust-text"><b>Easy Returns</b><small>7 day hassle-free</small></div></div>
+      <div class="trust-item"><i class="trust-ico fa fa-book" style="color:#f97316"></i><div class="trust-text"><b>Quality Books</b><small>Carefully checked</small></div></div>
+      <div class="trust-item"><i class="trust-ico fa fa-users" style="color:#f43f8e"></i><div class="trust-text"><b>Loved by Readers</b><small>10,000+ happy readers</small></div></div>
+    </div>
+
+    <!-- JOIN COMMUNITY -->
+    <div class="join-bar">
+      <div class="jb-left">
+        <div class="jb-avs">
+          <div class="jb-av" style="background:linear-gradient(135deg,#f97316,#e91e8c)">A</div>
+          <div class="jb-av" style="background:linear-gradient(135deg,#3b82f6,#8b5cf6)">S</div>
+          <div class="jb-av" style="background:linear-gradient(135deg,#10b981,#3b82f6)">K</div>
+          <div class="jb-av" style="background:linear-gradient(135deg,#f59e0b,#ef4444)">R</div>
+          <div class="jb-av" style="background:rgba(255,255,255,.18);font-size:9px">+</div>
+        </div>
+        <div class="jb-text">
+          <b>Books are better together. Be part of our growing community.</b>
+          <small>10,000+ happy readers already inside</small>
+        </div>
+      </div>
+      <button class="jb-btn" onclick="toast('Welcome to the community! 🎉','#059669')">Join Community</button>
+    </div>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+</div><!-- /layout -->
+
+<div id="toast-wrap"></div>
+<script>
+// ════════════════════════════════════════════════════════════════
+//  COMPLETE MODE DATA — 5 MODES × ALL SECTIONS
+// ════════════════════════════════════════════════════════════════
+const M = {
+  0:{
+    name:"General Mode",
+    accent:"#7c3aed",accentRgb:"124,58,237",
+    globeBg:"linear-gradient(135deg,#a78bfa,#7c3aed)",
+    heroBg:"linear-gradient(125deg,#fffbf5 0%,#fdf3ff 50%,#f0f4ff 100%)",
+    banner:{
+      icon:"🌐",
+      title:"General Mode — All genres, all moods, all stories",
+      sub:"Explore everything BookNest has to offer today",
+      bg:"linear-gradient(135deg,#f0fdf4,#ecfdf5)",
+      color:"#065f46",badgeBg:"#d1fae5",badgeColor:"#065f46",badge:"All Genres"
+    },
+    hero:{
+      headline:"Every day has a story.<br>Which one will <span class='ac'>you</span> live?",
+      sub:"AI-powered picks, personalized gifts, and a community that understands your love for books.",
+      btn1:"✨ Surprise Me",btn2:"Explore Books",
+      books:[
+        {bg:"#1a2744",tc:"#a5b4fc",ac:"rgba(165,180,252,.65)",e:"🌙",t:"The Midnight Library",a:"Matt Haig"},
+        {bg:"#2d1b4e",tc:"#f0abfc",ac:"rgba(240,171,252,.65)",e:"🌸",t:"It Ends With Us",a:"Colleen Hoover"},
+        {bg:"#7c2d12",tc:"#fde68a",ac:"rgba(253,230,138,.65)",e:"⚗️",t:"The Alchemist",a:"Paulo Coelho"}
+      ],
+      d1:"🌻",d2:"🌼",d3:"❤️",
+      giftTxt:"🎁 Just for you!",giftColor:"#f43f8e",
+      feats:[
+        {bg:"#fef3c7",i:"🤖",t:"AI-Recommendations<br>Just for you"},
+        {bg:"#fce7f3",i:"🌸",t:"Wool Flowers<br>with Emojis"},
+        {bg:"#cffafe",i:"🎁",t:"Premium<br>Packaging"},
+        {bg:"#dbeafe",i:"🛡️",t:"Easy Returns<br>Hassle-free"},
+        {bg:"#ffe4e6",i:"💖",t:"Loved by<br>10,000+ Readers"}
+      ]
+    },
+    trending:{
+      title:"Trending This Week 🔥",
+      books:[
+        {t:"The Midnight Library",a:"Matt Haig",p:349,r:4.8,bg:"#1a2744",tc:"#a5b4fc",ac:"rgba(165,180,252,.65)",e:"🌙"},
+        {t:"It Ends With Us",a:"Colleen Hoover",p:299,r:4.7,bg:"#2d1b4e",tc:"#f0abfc",ac:"rgba(240,171,252,.65)",e:"🌸"},
+        {t:"The Alchemist",a:"Paulo Coelho",p:199,r:4.8,bg:"#7c2d12",tc:"#fde68a",ac:"rgba(253,230,138,.65)",e:"⚗️"},
+        {t:"Atomic Habits",a:"James Clear",p:349,r:4.6,bg:"#064e3b",tc:"#86efac",ac:"rgba(134,239,172,.65)",e:"⚡"},
+        {t:"Verity",a:"Colleen Hoover",p:299,r:4.6,bg:"#0f172a",tc:"#fca5a5",ac:"rgba(252,165,165,.65)",e:"🩸"},
+        {t:"Rich Dad Poor Dad",a:"R. Kiyosaki",p:279,r:4.6,bg:"#4c1d95",tc:"#fbbf24",ac:"rgba(251,191,36,.65)",e:"💰"},
+        {t:"Psychology of Money",a:"Morgan Housel",p:299,r:4.7,bg:"#1c1c2e",tc:"#c4b5fd",ac:"rgba(196,181,253,.65)",e:"🧠"}
+      ]
+    },
+    gifts:{
+      title:"Gift Ideas for Every Occasion",
+      items:[
+        {e:"🎂",l:"Birthday Box",bg:"#ffedd5"},{e:"💝",l:"Anniversary",bg:"#fce7f3"},
+        {e:"🌿",l:"Self Care Pack",bg:"#d1fae5"},{e:"🎓",l:"Student Kit",bg:"#dbeafe"},
+        {e:"😊",l:"Thank You Box",bg:"#fef9c3"},{e:"📖",l:"Starter Pack",bg:"#ede9fe"},
+        {e:"💕",l:"Romantic Reads",bg:"#fce7f3"},{e:"🤝",l:"Friendship Box",bg:"#ffedd5"}
+      ]
+    },
+    moods:{
+      title:"Collections for Every Mood",
+      items:[
+        {e:"😊",l:"Feel Good Reads",bg:"#fef9c3"},{e:"💔",l:"Heartbreak Heals",bg:"#fce7f3"},
+        {e:"🌙",l:"Dark & Twisted",bg:"#ede9fe"},{e:"🧠",l:"Mindset Booster",bg:"#dbeafe"},
+        {e:"🎓",l:"Exam Warriors",bg:"#d1fae5"},{e:"🙏",l:"Spiritual Reads",bg:"#ffedd5"}
+      ]
+    },
+    community:{
+      avBg:"linear-gradient(135deg,#f97316,#e91e8c)",init:"R",
+      name:"Riya Sharma",handle:"@book_riya",time:"2h ago",
+      text:"Just got my Surprise Me box and it's absolutely perfect! 💜",
+      mediaBg:"linear-gradient(135deg,#fff7ed,#fce7f3)",mediaE:"📦",
+      likes:128,comments:24
+    },
+    videos:[
+      {e:"😍",dur:"0:32",bg:"linear-gradient(135deg,#1a2744,#2d3f6e)",d:"This box made my whole week!",w:"– Neha"},
+      {e:"🎁",dur:"0:45",bg:"linear-gradient(135deg,#3b1d8a,#7c3aed)",d:"Best gift I've ever received!",w:"– Arjun"},
+      {e:"🌸",dur:"0:28",bg:"linear-gradient(135deg,#9d174d,#e91e8c)",d:"The bouquet is so beautiful!",w:"– Simran"}
+    ],
+    nearby:[
+      {i:"R",n:"Rahul Verma",dist:"2.1 km away",badge:"Seller",bc:"seller",books:"120+ Books",bg:"linear-gradient(135deg,#3b82f6,#8b5cf6)"},
+      {i:"S",n:"Sneha Iyer",dist:"3.4 km away",badge:"Reader",bc:"reader",books:"80+ Books",bg:"linear-gradient(135deg,#f97316,#e91e8c)"},
+      {i:"A",n:"Aditya Mehta",dist:"5.6 km away",badge:"Seller",bc:"seller",books:"60+ Books",bg:"linear-gradient(135deg,#10b981,#3b82f6)"}
+    ],
+    popular:{
+      tags:[
+        {t:"# Romance",bg:"#fce7f3",c:"#9d174d"},{t:"# Dark",bg:"#ede9fe",c:"#4c1d95"},
+        {t:"# Motivation",bg:"#d1fae5",c:"#065f46"},{t:"# Fiction",bg:"#dbeafe",c:"#1e40af"}
+      ],
+      books:[
+        {t:"Twisted Love",a:"Ana Huang",p:349,r:"4.5",e:"💕",bg:"linear-gradient(135deg,#2d1b4e,#4c1d95)"},
+        {t:"Haunting Adeline",a:"H.D. Carlton",p:399,r:"4.6",e:"🌙",bg:"linear-gradient(135deg,#1e1b4b,#2d1068)"}
+      ]
+    }
+  },
+
+  1:{
+    name:"Romance Reader",
+    accent:"#e91e8c",accentRgb:"233,30,140",
+    globeBg:"linear-gradient(135deg,#f9a8d4,#e91e8c)",
+    heroBg:"linear-gradient(125deg,#fff5f9 0%,#fce7f3 50%,#fff0fb 100%)",
+    banner:{
+      icon:"❤️",
+      title:"Romance Reader — Love, relationships & emotions",
+      sub:"Dive into heartwarming stories and passionate romances",
+      bg:"linear-gradient(135deg,#fff0f6,#fce7f3)",
+      color:"#9d174d",badgeBg:"#fbcfe8",badgeColor:"#9d174d",badge:"💕 Romance Mode"
+    },
+    hero:{
+      headline:"Fall in love with<br>every <span class='ac'>page</span> you turn",
+      sub:"Swoony leads, slow burns, and heart-wrenching love stories curated just for you.",
+      btn1:"💕 Find My Romance",btn2:"Browse Love Stories",
+      books:[
+        {bg:"#4a1040",tc:"#f9a8d4",ac:"rgba(249,168,212,.65)",e:"💕",t:"It Ends With Us",a:"Colleen Hoover"},
+        {bg:"#831843",tc:"#fda4af",ac:"rgba(253,164,175,.65)",e:"🌹",t:"Twisted Love",a:"Ana Huang"},
+        {bg:"#701a75",tc:"#e879f9",ac:"rgba(232,121,249,.65)",e:"💌",t:"The Love Hypothesis",a:"Ali Hazelwood"}
+      ],
+      d1:"🌹",d2:"💐",d3:"💕",
+      giftTxt:"💕 Made for love",giftColor:"#e91e8c",
+      feats:[
+        {bg:"#fce7f3",i:"💕",t:"Swoon-worthy<br>Love Stories"},
+        {bg:"#ffe4e6",i:"🌹",t:"Slow Burn<br>Romance Picks"},
+        {bg:"#fdf2f8",i:"💌",t:"Gift for<br>Your Person"},
+        {bg:"#fce7f3",i:"😍",t:"Reader<br>Faves"},
+        {bg:"#fff0f6",i:"❤️",t:"Loved by<br>10,000+ Readers"}
+      ]
+    },
+    trending:{
+      title:"Hot Romance Reads 💕",
+      books:[
+        {t:"It Ends With Us",a:"Colleen Hoover",p:299,r:4.9,bg:"#4a1040",tc:"#f9a8d4",ac:"rgba(249,168,212,.65)",e:"💕"},
+        {t:"Twisted Love",a:"Ana Huang",p:349,r:4.8,bg:"#831843",tc:"#fda4af",ac:"rgba(253,164,175,.65)",e:"🌹"},
+        {t:"Love Hypothesis",a:"Ali Hazelwood",p:329,r:4.7,bg:"#701a75",tc:"#e879f9",ac:"rgba(232,121,249,.65)",e:"💌"},
+        {t:"November 9",a:"Colleen Hoover",p:279,r:4.8,bg:"#9d174d",tc:"#fbcfe8",ac:"rgba(251,207,232,.65)",e:"📝"},
+        {t:"The Notebook",a:"Nicholas Sparks",p:249,r:4.6,bg:"#4a1942",tc:"#d8b4fe",ac:"rgba(216,180,254,.65)",e:"📓"},
+        {t:"People We Meet",a:"Taylor Jenkins",p:299,r:4.5,bg:"#7f1d1d",tc:"#fca5a5",ac:"rgba(252,165,165,.65)",e:"☕"},
+        {t:"Beach Read",a:"Emily Henry",p:259,r:4.7,bg:"#1e3a5f",tc:"#bae6fd",ac:"rgba(186,230,253,.65)",e:"🏖️"}
+      ]
+    },
+    gifts:{
+      title:"Romantic Gift Ideas 💝",
+      items:[
+        {e:"💝",l:"Anniversary Box",bg:"#fce7f3"},{e:"🌹",l:"Rose & Reads",bg:"#ffe4e6"},
+        {e:"💌",l:"Love Letters",bg:"#fdf2f8"},{e:"🍷",l:"Date Night",bg:"#fee2e2"},
+        {e:"💍",l:"Proposal Pack",bg:"#fce7f3"},{e:"💕",l:"Couples Box",bg:"#fdf4ff"},
+        {e:"🫶",l:"BFF Romance",bg:"#ffe4e6"},{e:"😍",l:"Swoony Set",bg:"#fce7f3"}
+      ]
+    },
+    moods:{
+      title:"Romance Reading Moods",
+      items:[
+        {e:"💕",l:"Slow Burn",bg:"#fce7f3"},{e:"😭",l:"Cry Your Eyes Out",bg:"#ffe4e6"},
+        {e:"😂",l:"Romantic Comedy",bg:"#fef9c3"},{e:"🔥",l:"Steamy Reads",bg:"#fee2e2"},
+        {e:"🏖️",l:"Summer Flings",bg:"#dbeafe"},{e:"💔",l:"Second Chances",bg:"#fdf4ff"}
+      ]
+    },
+    community:{
+      avBg:"linear-gradient(135deg,#e91e8c,#f97316)",init:"P",
+      name:"Priya Mehta",handle:"@romance_priya",time:"1h ago",
+      text:"Finished Twisted Love at 2am and I'm a MESS 😭 Best book hangover ever!! 💕",
+      mediaBg:"linear-gradient(135deg,#fce7f3,#fff0f6)",mediaE:"💕",
+      likes:342,comments:89
+    },
+    videos:[
+      {e:"😭",dur:"0:38",bg:"linear-gradient(135deg,#831843,#e91e8c)",d:"I ugly cried 3 times reading this",w:"– Kavya"},
+      {e:"💕",dur:"0:52",bg:"linear-gradient(135deg,#4a1040,#831843)",d:"My top 5 swoon-worthy heroes!",w:"– Ananya"},
+      {e:"🌹",dur:"0:41",bg:"linear-gradient(135deg,#9d174d,#e11d74)",d:"This slow burn was SO worth it",w:"– Ritika"}
+    ],
+    nearby:[
+      {i:"K",n:"Kavya Sharma",dist:"1.2 km away",badge:"Reader",bc:"reader",books:"200+ Romances",bg:"linear-gradient(135deg,#e91e8c,#f97316)"},
+      {i:"P",n:"Pooja Nair",dist:"2.8 km away",badge:"Reader",bc:"reader",books:"150+ Books",bg:"linear-gradient(135deg,#831843,#e91e8c)"},
+      {i:"M",n:"Meera Iyer",dist:"4.1 km away",badge:"Seller",bc:"seller",books:"90+ Books",bg:"linear-gradient(135deg,#f97316,#fbbf24)"}
+    ],
+    popular:{
+      tags:[
+        {t:"# Slow Burn",bg:"#fce7f3",c:"#9d174d"},{t:"# Colleen Hoover",bg:"#ffe4e6",c:"#881337"},
+        {t:"# RomCom",bg:"#fef9c3",c:"#713f12"},{t:"# New Adult",bg:"#dbeafe",c:"#1e40af"}
+      ],
+      books:[
+        {t:"November 9",a:"Colleen Hoover",p:279,r:"4.8",e:"📝",bg:"linear-gradient(135deg,#9d174d,#e91e8c)"},
+        {t:"Beach Read",a:"Emily Henry",p:259,r:"4.7",e:"🏖️",bg:"linear-gradient(135deg,#1e3a5f,#3b82f6)"}
+      ]
+    }
+  },
+
+  2:{
+    name:"Dark Romance Reader",
+    accent:"#7c3aed",accentRgb:"124,58,237",
+    globeBg:"linear-gradient(135deg,#4c1d95,#6d28d9)",
+    heroBg:"linear-gradient(125deg,#100a1e 0%,#1a0e3a 55%,#0d1b2a 100%)",
+    banner:{
+      icon:"🌙",
+      title:"Dark Romance Reader — Intense. Raw. Unfiltered.",
+      sub:"For readers who live in the dark and complicated side of love",
+      bg:"linear-gradient(135deg,#1e1b4b,#2d1b4e)",
+      color:"#c4b5fd",badgeBg:"rgba(196,181,253,.2)",badgeColor:"#c4b5fd",badge:"🌙 Dark Mode"
+    },
+    hero:{
+      headline:"Some love stories are<br>meant to be <span class='ac'>dark</span>",
+      sub:"Obsessive heroes, morally grey characters, and stories that push every boundary.",
+      btn1:"🌙 Enter the Dark Side",btn2:"Browse Dark Reads",
+      books:[
+        {bg:"#1e1b4b",tc:"#c4b5fd",ac:"rgba(196,181,253,.65)",e:"🌙",t:"Haunting Adeline",a:"H.D. Carlton"},
+        {bg:"#14001f",tc:"#e879f9",ac:"rgba(232,121,249,.65)",e:"🩸",t:"Icebreaker",a:"Hannah Grace"},
+        {bg:"#0f172a",tc:"#818cf8",ac:"rgba(129,140,248,.65)",e:"🖤",t:"Corrupt",a:"Penelope Douglas"}
+      ],
+      d1:"🌑",d2:"⚡",d3:"🖤",
+      giftTxt:"🖤 Dangerously good",giftColor:"#a78bfa",
+      feats:[
+        {bg:"rgba(30,27,75,.8)",i:"🌙",t:"Dark & Twisted<br>Tropes"},
+        {bg:"rgba(31,22,53,.8)",i:"🖤",t:"Anti-Heroes<br>& Villains"},
+        {bg:"rgba(20,0,31,.8)",i:"⚡",t:"Morally Grey<br>Characters"},
+        {bg:"rgba(15,23,42,.8)",i:"🩸",t:"Dark Mafia<br>Romance"},
+        {bg:"rgba(30,27,75,.8)",i:"💜",t:"Loved by<br>10,000+ Readers"}
+      ]
+    },
+    trending:{
+      title:"Dark & Addictive Reads 🌙",
+      books:[
+        {t:"Haunting Adeline",a:"H.D. Carlton",p:399,r:4.8,bg:"#1e1b4b",tc:"#c4b5fd",ac:"rgba(196,181,253,.65)",e:"🌙"},
+        {t:"Corrupt",a:"Penelope Douglas",p:349,r:4.7,bg:"#0f172a",tc:"#818cf8",ac:"rgba(129,140,248,.65)",e:"🖤"},
+        {t:"Twisted Games",a:"Ana Huang",p:329,r:4.6,bg:"#14001f",tc:"#e879f9",ac:"rgba(232,121,249,.65)",e:"🃏"},
+        {t:"Icebreaker",a:"Hannah Grace",p:279,r:4.7,bg:"#1c1917",tc:"#d1d5db",ac:"rgba(209,213,219,.65)",e:"🏒"},
+        {t:"Vicious",a:"L.J. Shen",p:349,r:4.5,bg:"#27272a",tc:"#a1a1aa",ac:"rgba(161,161,170,.65)",e:"⚔️"},
+        {t:"King of Wrath",a:"Ana Huang",p:299,r:4.6,bg:"#1a0a3c",tc:"#ddd6fe",ac:"rgba(221,214,254,.65)",e:"👑"},
+        {t:"Daisy Darker",a:"Alice Feeney",p:319,r:4.4,bg:"#0c1a26",tc:"#7dd3fc",ac:"rgba(125,211,252,.65)",e:"🔪"}
+      ]
+    },
+    gifts:{
+      title:"Dark & Moody Gift Sets 🌙",
+      items:[
+        {e:"🌙",l:"Dark Romance Bundle",bg:"#1e1b4b"},{e:"🖤",l:"Anti-Hero Pack",bg:"#27272a"},
+        {e:"⚡",l:"Villain Era Box",bg:"#14001f"},{e:"🩸",l:"Mafia Romance Set",bg:"#3b0764"},
+        {e:"🕯️",l:"Midnight Reads",bg:"#1c1917"},{e:"👑",l:"King & Queen Box",bg:"#1e1b4b"},
+        {e:"🔥",l:"Forbidden Love",bg:"#431407"},{e:"💀",l:"Dark Academia",bg:"#0f172a"}
+      ]
+    },
+    moods:{
+      title:"Dark Reading Collections",
+      items:[
+        {e:"🌙",l:"Mafia Romance",bg:"#1e1b4b"},{e:"👑",l:"Dark Royals",bg:"#14001f"},
+        {e:"🔥",l:"Forbidden Love",bg:"#431407"},{e:"🖤",l:"Bully Romance",bg:"#27272a"},
+        {e:"⚔️",l:"Dark Fantasy",bg:"#0c1a26"},{e:"🩸",l:"Suspense & Thrill",bg:"#1c0026"}
+      ]
+    },
+    community:{
+      avBg:"linear-gradient(135deg,#4c1d95,#7c3aed)",init:"D",
+      name:"Divya Rao",handle:"@darkromance_div",time:"3h ago",
+      text:"Haunting Adeline just destroyed me in the BEST way. H.D. Carlton is not human 😭🖤 #ZaddyAlex",
+      mediaBg:"linear-gradient(135deg,#1e1b4b,#0f172a)",mediaE:"🌙",
+      likes:891,comments:234
+    },
+    videos:[
+      {e:"🌙",dur:"1:02",bg:"linear-gradient(135deg,#1e1b4b,#4c1d95)",d:"Haunting Adeline reaction thread",w:"– Divya"},
+      {e:"🖤",dur:"0:48",bg:"linear-gradient(135deg,#0f172a,#1e1b4b)",d:"My dark romance starter pack!",w:"– Sia"},
+      {e:"⚡",dur:"0:35",bg:"linear-gradient(135deg,#14001f,#3b0764)",d:"Why I love morally grey MCs",w:"– Aaradhya"}
+    ],
+    nearby:[
+      {i:"D",n:"Divya Rao",dist:"1.8 km away",badge:"Reader",bc:"reader",books:"300+ Dark Reads",bg:"linear-gradient(135deg,#4c1d95,#7c3aed)"},
+      {i:"S",n:"Sia Kapoor",dist:"3.2 km away",badge:"Seller",bc:"seller",books:"180+ Books",bg:"linear-gradient(135deg,#1e1b4b,#4c1d95)"},
+      {i:"A",n:"Aaradhya Singh",dist:"4.7 km away",badge:"Reader",bc:"reader",books:"240+ Books",bg:"linear-gradient(135deg,#6d28d9,#a855f7)"}
+    ],
+    popular:{
+      tags:[
+        {t:"# Mafia",bg:"rgba(78,39,180,.12)",c:"#6d28d9"},{t:"# Bully Romance",bg:"rgba(39,39,42,.15)",c:"#71717a"},
+        {t:"# Forbidden",bg:"rgba(67,20,7,.15)",c:"#9d174d"},{t:"# Anti-Hero",bg:"rgba(20,0,31,.15)",c:"#a78bfa"}
+      ],
+      books:[
+        {t:"Haunting Adeline",a:"H.D. Carlton",p:399,r:"4.8",e:"🌙",bg:"linear-gradient(135deg,#1e1b4b,#0f172a)"},
+        {t:"Corrupt",a:"Penelope Douglas",p:349,r:"4.7",e:"🖤",bg:"linear-gradient(135deg,#0f172a,#27272a)"}
+      ]
+    }
+  },
+
+  3:{
+    name:"Student Reader",
+    accent:"#2563eb",accentRgb:"37,99,235",
+    globeBg:"linear-gradient(135deg,#60a5fa,#2563eb)",
+    heroBg:"linear-gradient(125deg,#f0f9ff 0%,#eff6ff 50%,#f0fdf4 100%)",
+    banner:{
+      icon:"🎓",
+      title:"Student Reader — Study, focus & success",
+      sub:"Books to ace your exams, boost productivity and think sharper",
+      bg:"linear-gradient(135deg,#eff6ff,#dbeafe)",
+      color:"#1e40af",badgeBg:"#bfdbfe",badgeColor:"#1e40af",badge:"📚 Study Mode"
+    },
+    hero:{
+      headline:"Every book you read<br>makes you <span class='ac'>smarter</span>",
+      sub:"Curated study tools, exam prep books, and productivity reads to fuel your student journey.",
+      btn1:"📚 Find Study Books",btn2:"Exam Prep Pack",
+      books:[
+        {bg:"#1e3a5f",tc:"#93c5fd",ac:"rgba(147,197,253,.65)",e:"⚡",t:"Atomic Habits",a:"James Clear"},
+        {bg:"#065f46",tc:"#86efac",ac:"rgba(134,239,172,.65)",e:"🧠",t:"Deep Work",a:"Cal Newport"},
+        {bg:"#1e40af",tc:"#bfdbfe",ac:"rgba(191,219,254,.65)",e:"🎯",t:"Think & Grow Rich",a:"Napoleon Hill"}
+      ],
+      d1:"📐",d2:"✏️",d3:"💡",
+      giftTxt:"🎓 Ace your exams!",giftColor:"#2563eb",
+      feats:[
+        {bg:"#dbeafe",i:"📚",t:"Exam Prep<br>Books"},
+        {bg:"#d1fae5",i:"⚡",t:"Productivity<br>Reads"},
+        {bg:"#fef9c3",i:"✏️",t:"Note-taking<br>Guides"},
+        {bg:"#dbeafe",i:"🧠",t:"Memory<br>Techniques"},
+        {bg:"#dcfce7",i:"🏆",t:"Top Scorer<br>Picks"}
+      ]
+    },
+    trending:{
+      title:"Top Study & Success Books 📚",
+      books:[
+        {t:"Atomic Habits",a:"James Clear",p:349,r:4.8,bg:"#064e3b",tc:"#86efac",ac:"rgba(134,239,172,.65)",e:"⚡"},
+        {t:"Deep Work",a:"Cal Newport",p:329,r:4.7,bg:"#1e3a5f",tc:"#93c5fd",ac:"rgba(147,197,253,.65)",e:"🔵"},
+        {t:"Think & Grow Rich",a:"Napoleon Hill",p:199,r:4.7,bg:"#1e40af",tc:"#bfdbfe",ac:"rgba(191,219,254,.65)",e:"💰"},
+        {t:"The 4-Hour Work Week",a:"Tim Ferriss",p:349,r:4.5,bg:"#14532d",tc:"#86efac",ac:"rgba(134,239,172,.65)",e:"⏱️"},
+        {t:"Mindset",a:"Carol S. Dweck",p:279,r:4.6,bg:"#1e3a5f",tc:"#a5f3fc",ac:"rgba(165,243,252,.65)",e:"🧠"},
+        {t:"How to Win Friends",a:"Dale Carnegie",p:199,r:4.7,bg:"#0c4a6e",tc:"#7dd3fc",ac:"rgba(125,211,252,.65)",e:"🤝"},
+        {t:"Rich Dad Poor Dad",a:"R. Kiyosaki",p:279,r:4.6,bg:"#4c1d95",tc:"#fbbf24",ac:"rgba(251,191,36,.65)",e:"💵"}
+      ]
+    },
+    gifts:{
+      title:"Student Gift Sets 🎓",
+      items:[
+        {e:"🎓",l:"Exam Warrior Pack",bg:"#dbeafe"},{e:"⚡",l:"Productivity Kit",bg:"#d1fae5"},
+        {e:"📝",l:"Notes & Study Set",bg:"#fef9c3"},{e:"🏆",l:"Top Scorer Bundle",bg:"#dcfce7"},
+        {e:"🧠",l:"Brain Booster Box",bg:"#dbeafe"},{e:"💡",l:"Creative Thinking",bg:"#fef3c7"},
+        {e:"🗓️",l:"Planner & Books",bg:"#eff6ff"},{e:"☕",l:"Study Night Kit",bg:"#fff7ed"}
+      ]
+    },
+    moods:{
+      title:"Study Reading Collections",
+      items:[
+        {e:"📊",l:"Business & Finance",bg:"#dbeafe"},{e:"🧬",l:"Science & Tech",bg:"#d1fae5"},
+        {e:"🎨",l:"Arts & Design",bg:"#fef9c3"},{e:"⚖️",l:"Law & Politics",bg:"#f3f4f6"},
+        {e:"🧠",l:"Psychology",bg:"#ede9fe"},{e:"🌍",l:"Social Sciences",bg:"#dcfce7"}
+      ]
+    },
+    community:{
+      avBg:"linear-gradient(135deg,#2563eb,#16a34a)",init:"V",
+      name:"Vikram Anand",handle:"@studygram_vik",time:"4h ago",
+      text:"Read Atomic Habits for the 3rd time. Still hits different before exams. 10/10 recommend 🙏📚",
+      mediaBg:"linear-gradient(135deg,#eff6ff,#d1fae5)",mediaE:"📚",
+      likes:512,comments:143
+    },
+    videos:[
+      {e:"📚",dur:"1:15",bg:"linear-gradient(135deg,#1e3a5f,#2563eb)",d:"5 books that changed my study life",w:"– Vikram"},
+      {e:"⚡",dur:"0:55",bg:"linear-gradient(135deg,#064e3b,#16a34a)",d:"How Atomic Habits helped me top",w:"– Reena"},
+      {e:"🎯",dur:"0:42",bg:"linear-gradient(135deg,#1e40af,#3b82f6)",d:"Best books for competitive exams",w:"– Arjun"}
+    ],
+    nearby:[
+      {i:"V",n:"Vikram Anand",dist:"0.9 km away",badge:"Reader",bc:"reader",books:"100+ Study Books",bg:"linear-gradient(135deg,#2563eb,#3b82f6)"},
+      {i:"R",n:"Reena Pillai",dist:"2.4 km away",badge:"Seller",bc:"seller",books:"120+ Books",bg:"linear-gradient(135deg,#16a34a,#059669)"},
+      {i:"A",n:"Arjun Nair",dist:"3.8 km away",badge:"Reader",bc:"reader",books:"80+ Books",bg:"linear-gradient(135deg,#0891b2,#2563eb)"}
+    ],
+    popular:{
+      tags:[
+        {t:"# Productivity",bg:"#d1fae5",c:"#065f46"},{t:"# Exam Prep",bg:"#dbeafe",c:"#1e40af"},
+        {t:"# Finance",bg:"#fef9c3",c:"#713f12"},{t:"# Self Help",bg:"#f3f4f6",c:"#374151"}
+      ],
+      books:[
+        {t:"Deep Work",a:"Cal Newport",p:329,r:"4.7",e:"🔵",bg:"linear-gradient(135deg,#1e3a5f,#2563eb)"},
+        {t:"Atomic Habits",a:"James Clear",p:349,r:"4.8",e:"⚡",bg:"linear-gradient(135deg,#064e3b,#16a34a)"}
+      ]
+    }
+  },
+
+  4:{
+    name:"Spiritual Reader",
+    accent:"#d97706",accentRgb:"217,119,6",
+    globeBg:"linear-gradient(135deg,#fcd34d,#d97706)",
+    heroBg:"linear-gradient(125deg,#fffbeb 0%,#fff7ed 50%,#fdf4ff 100%)",
+    banner:{
+      icon:"🙏",
+      title:"Spiritual Reader — Wisdom, peace & purpose",
+      sub:"Sacred texts, philosophy, and books to nourish your inner self",
+      bg:"linear-gradient(135deg,#fffbeb,#fff7ed)",
+      color:"#92400e",badgeBg:"#fde68a",badgeColor:"#92400e",badge:"🕉️ Spiritual Mode"
+    },
+    hero:{
+      headline:"Find peace in<br>every <span class='ac'>word</span> you read",
+      sub:"Ancient wisdom, Vedic texts, and modern spiritual guides to light your path within.",
+      btn1:"🙏 Explore Wisdom",btn2:"Browse Vedic Texts",
+      books:[
+        {bg:"#78350f",tc:"#fde68a",ac:"rgba(253,230,138,.65)",e:"🕉️",t:"Bhagavad Gita",a:"Prabhupada"},
+        {bg:"#7c2d12",tc:"#fed7aa",ac:"rgba(254,215,170,.65)",e:"☮️",t:"The Power of Now",a:"Eckhart Tolle"},
+        {bg:"#713f12",tc:"#fef08a",ac:"rgba(254,240,138,.65)",e:"✨",t:"The Alchemist",a:"Paulo Coelho"}
+      ],
+      d1:"🌸",d2:"🪷",d3:"🙏",
+      giftTxt:"✨ Seek the truth",giftColor:"#d97706",
+      feats:[
+        {bg:"#fef3c7",i:"🕉️",t:"Vedic &<br>Sacred Texts"},
+        {bg:"#fff7ed",i:"🧘",t:"Mindfulness<br>& Meditation"},
+        {bg:"#fef9c3",i:"☮️",t:"Peace &<br>Positivity"},
+        {bg:"#fff7ed",i:"🌸",t:"Ancient<br>Wisdom"},
+        {bg:"#fef3c7",i:"💫",t:"Loved by<br>10,000+ Seekers"}
+      ]
+    },
+    trending:{
+      title:"Sacred & Spiritual Reads 🙏",
+      books:[
+        {t:"Bhagavad Gita",a:"Prabhupada",p:249,r:4.9,bg:"#78350f",tc:"#fde68a",ac:"rgba(253,230,138,.65)",e:"🕉️"},
+        {t:"The Alchemist",a:"Paulo Coelho",p:199,r:4.8,bg:"#7c2d12",tc:"#fed7aa",ac:"rgba(254,215,170,.65)",e:"⚗️"},
+        {t:"Power of Now",a:"Eckhart Tolle",p:319,r:4.7,bg:"#713f12",tc:"#fef08a",ac:"rgba(254,240,138,.65)",e:"🌟"},
+        {t:"Autobiography of a Yogi",a:"Yogananda",p:299,r:4.8,bg:"#064e3b",tc:"#86efac",ac:"rgba(134,239,172,.65)",e:"🧘"},
+        {t:"The Upanishads",a:"Eknath Easwaran",p:279,r:4.7,bg:"#451a03",tc:"#fed7aa",ac:"rgba(254,215,170,.65)",e:"📿"},
+        {t:"Siddhartha",a:"Hermann Hesse",p:199,r:4.7,bg:"#1c1c2e",tc:"#c4b5fd",ac:"rgba(196,181,253,.65)",e:"🌊"},
+        {t:"Man's Search for Meaning",a:"Viktor Frankl",p:249,r:4.8,bg:"#374151",tc:"#d1d5db",ac:"rgba(209,213,219,.65)",e:"💡"}
+      ]
+    },
+    gifts:{
+      title:"Spiritual Gift Sets 🙏",
+      items:[
+        {e:"🕉️",l:"Vedic Wisdom Box",bg:"#fef3c7"},{e:"🧘",l:"Meditation Kit",bg:"#d1fae5"},
+        {e:"📿",l:"Sacred Texts Bundle",bg:"#fff7ed"},{e:"☮️",l:"Peace & Calm Box",bg:"#e0f2fe"},
+        {e:"🌸",l:"Mindfulness Set",bg:"#fdf4ff"},{e:"✨",l:"Soul Nourishment",bg:"#fef9c3"},
+        {e:"🪷",l:"Lotus Pack",bg:"#fce7f3"},{e:"💫",l:"Enlightenment Box",bg:"#fef3c7"}
+      ]
+    },
+    moods:{
+      title:"Spiritual Reading Paths",
+      items:[
+        {e:"🕉️",l:"Vedic Scriptures",bg:"#fef3c7"},{e:"🧘",l:"Meditation & Yoga",bg:"#d1fae5"},
+        {e:"☮️",l:"Inner Peace",bg:"#e0f2fe"},{e:"💫",l:"Self Discovery",bg:"#fdf4ff"},
+        {e:"🌿",l:"Nature & Universe",bg:"#dcfce7"},{e:"📿",l:"Ancient Philosophy",bg:"#fff7ed"}
+      ]
+    },
+    community:{
+      avBg:"linear-gradient(135deg,#d97706,#ea580c)",init:"G",
+      name:"Guru Prasad",handle:"@seekinglight_gp",time:"6h ago",
+      text:"The Bhagavad Gita answers every question life throws at you. Reading it daily has transformed my mornings 🙏✨",
+      mediaBg:"linear-gradient(135deg,#fffbeb,#fff7ed)",mediaE:"🕉️",
+      likes:678,comments:201
+    },
+    videos:[
+      {e:"🕉️",dur:"2:10",bg:"linear-gradient(135deg,#78350f,#d97706)",d:"How the Gita changed my life",w:"– Guru Prasad"},
+      {e:"🧘",dur:"1:30",bg:"linear-gradient(135deg,#064e3b,#16a34a)",d:"Books that deepened my meditation",w:"– Swami Anand"},
+      {e:"✨",dur:"0:58",bg:"linear-gradient(135deg,#713f12,#d97706)",d:"Top 5 spiritual books for beginners",w:"– Lakshmi"}
+    ],
+    nearby:[
+      {i:"G",n:"Guru Prasad",dist:"1.5 km away",badge:"Reader",bc:"reader",books:"200+ Spiritual",bg:"linear-gradient(135deg,#d97706,#ea580c)"},
+      {i:"L",n:"Lakshmi Devi",dist:"2.9 km away",badge:"Seller",bc:"seller",books:"100+ Books",bg:"linear-gradient(135deg,#7c2d12,#d97706)"},
+      {i:"S",n:"Swami Anand",dist:"4.3 km away",badge:"Reader",bc:"reader",books:"300+ Books",bg:"linear-gradient(135deg,#064e3b,#16a34a)"}
+    ],
+    popular:{
+      tags:[
+        {t:"# Vedic",bg:"#fef3c7",c:"#92400e"},{t:"# Meditation",bg:"#d1fae5",c:"#065f46"},
+        {t:"# Philosophy",bg:"#fff7ed",c:"#7c3f00"},{t:"# Self Discovery",bg:"#fdf4ff",c:"#6b21a8"}
+      ],
+      books:[
+        {t:"Bhagavad Gita",a:"Prabhupada",p:249,r:"4.9",e:"🕉️",bg:"linear-gradient(135deg,#78350f,#d97706)"},
+        {t:"Autobiography Yogi",a:"Yogananda",p:299,r:"4.8",e:"🧘",bg:"linear-gradient(135deg,#064e3b,#16a34a)"}
+      ]
+    }
+  }
+};
+
+// ════════════════════════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════════════════════════
+let curMode = 0;
+let cartCnt = 2;
+let liked = false;
+let sbOpen = true;
+let qStep = 0, qAns = {};
+
+const QUIZ = [
+  {title:"Who are you picking for?",desc:"Let's personalise your perfect book box!",
+   opts:[{e:"🙋",t:"For Me"},{e:"💝",t:"For Someone I Love"},{e:"👫",t:"For a Friend"},{e:"🎓",t:"For a Student"}]},
+  {title:"What's your reading mood?",desc:"Tell us how you feel right now.",
+   opts:[{e:"💕",t:"Romantic"},{e:"🌙",t:"Dark & Addictive"},{e:"🔥",t:"Motivated"},{e:"😌",t:"Calm & Peaceful"}]},
+  {title:"Your favourite genre?",desc:"Pick what excites you most.",
+   opts:[{e:"📖",t:"Romance"},{e:"🌙",t:"Dark Romance"},{e:"🚀",t:"Self Help"},{e:"🧘",t:"Spirituality"}]},
+  {title:"What's your budget for the box?",desc:"We'll curate the best within your range.",
+   opts:[{e:"💚",t:"Under ₹300"},{e:"💛",t:"₹300–600"},{e:"🧡",t:"₹600–1000"},{e:"❤️",t:"₹1000+"}]}
+];
+
+// ════════════════════════════════════════════════════════════════
+//  RENDER HELPERS
+// ════════════════════════════════════════════════════════════════
+function esc(s){return String(s).replace(/'/g,"\\'")}
+
+function renderBooks(books){
+  return books.map(b =>
+    `<div class="bk" onclick="toast('Opening: ${esc(b.t)} 📖')">
+      <div class="bk-cover">
+        <div class="bk-inner" style="background:${b.bg}">
+          <span class="bk-emoji">${b.e}</span>
+          <span class="bk-ct" style="color:${b.tc}">${b.t}</span>
+          <span class="bk-ca" style="color:${b.ac}">${b.a}</span>
+        </div>
+        <div class="bk-rating"><i class="fa fa-star"></i>${b.r}</div>
+        <button class="bk-cart" onclick="event.stopPropagation();addCart('${esc(b.t)}')"><i class="fa fa-cart-plus"></i></button>
+      </div>
+      <div class="bk-title">${b.t}</div>
+      <div class="bk-author">${b.a}</div>
+      <div class="bk-stars"><i class="fa fa-star"></i><span>${b.r}</span></div>
+      <div class="bk-price-row">
+        <span class="bk-price">₹${b.p}</span>
+        <button class="bk-add" onclick="event.stopPropagation();addCart('${esc(b.t)}')"><i class="fa fa-plus"></i></button>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function renderGifts(items){
+  return items.map(g =>
+    `<div class="gift-item" onclick="toast('${g.e} ${g.l}')">
+      <div class="gift-icon" style="background:${g.bg}">${g.e}</div>
+      <div class="gift-label">${g.l}</div>
+    </div>`
+  ).join('');
+}
+
+function renderMoods(items){
+  return items.map(m =>
+    `<div class="mood-item" onclick="toast('${m.e} ${m.l}')">
+      <div class="mood-icon" style="background:${m.bg}">${m.e}</div>
+      <div class="mood-label">${m.l}</div>
+    </div>`
+  ).join('');
+}
+
+function renderCommunity(c){
+  return `
+    <div class="comm-head">
+      <div class="comm-av" style="background:${c.avBg}">${c.init}</div>
+      <div>
+        <div class="comm-name">${c.name}</div>
+        <div class="comm-handle">${c.handle}</div>
+      </div>
+      <div class="comm-time">${c.time}</div>
+    </div>
+    <p class="comm-text">${c.text}</p>
+    <div class="comm-media" style="background:${c.mediaBg}">${c.mediaE}</div>
+    <div class="comm-actions">
+      <span class="comm-act" id="likeBtn" onclick="toggleLike()">
+        <i class="fa fa-heart"></i><span id="likeCnt"> ${c.likes}</span>
+      </span>
+      <span class="comm-act" onclick="toast('Comments 💬')">
+        <i class="fa-regular fa-comment"></i> ${c.comments}
+      </span>
+      <span class="comm-bm" onclick="toast('Saved! 🔖')"><i class="fa-regular fa-bookmark"></i></span>
+    </div>`;
+}
+
+function renderVideos(videos){
+  return videos.map(v =>
+    `<div class="vid-item" onclick="toast('Playing video ▶️')">
+      <div class="vid-thumb" style="background:${v.bg}">
+        ${v.e}
+        <div class="vid-overlay"><div class="vid-play"><i class="fa fa-play"></i></div></div>
+        <div class="vid-dur">${v.dur}</div>
+      </div>
+      <div class="vid-desc">${v.d}</div>
+      <div class="vid-who">${v.w}</div>
+    </div>`
+  ).join('');
+}
+
+function renderNearby(nearby){
+  return nearby.map(n =>
+    `<div class="near-row">
+      <div class="near-av" style="background:${n.bg}">${n.i}</div>
+      <div class="near-info">
+        <div class="near-name">${n.n}</div>
+        <div class="near-dist">${n.dist}</div>
+      </div>
+      <span class="near-badge ${n.bc}">${n.badge}</span>
+      <div class="near-books">${n.books}</div>
+      <button class="near-chat" onclick="toast('Messaging ${esc(n.n)} 💬')"><i class="fa fa-comment"></i></button>
+    </div>`
+  ).join('');
+}
+
+function renderPopularTags(tags){
+  return tags.map(t =>
+    `<span class="pop-tag" style="background:${t.bg};color:${t.c}" onclick="toast('${t.t}')">${t.t}</span>`
+  ).join('');
+}
+
+function renderPopularBooks(books){
+  return books.map(b =>
+    `<div class="pop-bk" onclick="toast('Opening: ${esc(b.t)} 📖')">
+      <div class="pop-cover" style="background:${b.bg}">${b.e}</div>
+      <div class="pop-title">${b.t}</div>
+      <div class="pop-author">${b.a}</div>
+      <div class="pop-rating">★ ${b.r}</div>
+      <div class="pop-pr">
+        <span class="pop-price">₹${b.p}</span>
+        <button class="pop-add" onclick="event.stopPropagation();addCart('${esc(b.t)}')"><i class="fa fa-plus"></i></button>
+      </div>
+    </div>`
+  ).join('');
+}
+
+function renderHeroScene(hero, accent){
+  const [b1,b2,b3] = hero.books;
+  return `
+    <div class="hb hb1" style="background:${b1.bg}">
+      <div class="hbi">
+        <span style="font-size:28px">${b1.e}</span>
+        <span class="hbt" style="color:${b1.tc}">${b1.t}</span>
+        <span class="hba" style="color:${b1.ac}">${b1.a}</span>
+      </div>
+    </div>
+    <div class="hb hb2" style="background:${b2.bg}">
+      <div class="hbi">
+        <span style="font-size:28px">${b2.e}</span>
+        <span class="hbt" style="color:${b2.tc}">${b2.t}</span>
+        <span class="hba" style="color:${b2.ac}">${b2.a}</span>
+      </div>
+    </div>
+    <div class="hb hb3" style="background:${b3.bg}">
+      <div class="hbi">
+        <span style="font-size:28px">${b3.e}</span>
+        <span class="hbt" style="color:${b3.tc}">${b3.t}</span>
+        <span class="hba" style="color:${b3.ac}">${b3.a}</span>
+      </div>
+    </div>
+    <span class="h-deco hd1">${hero.d1}</span>
+    <span class="h-deco hd2">${hero.d2}</span>
+    <span class="h-deco hd3">${hero.d3}</span>
+    <div class="h-deco h-gift" style="color:${hero.giftColor}">${hero.giftTxt}</div>
+    <div class="h-wm">BookNest</div>`;
+}
+
+function renderHeroFeats(feats){
+  return feats.map(f =>
+    `<div class="hf">
+      <div class="hf-icon" style="background:${f.bg}">${f.i}</div>
+      <div class="hf-text">${f.t}</div>
+    </div>`
+  ).join('');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  APPLY MODE — THE MAIN FUNCTION THAT UPDATES EVERYTHING
+// ════════════════════════════════════════════════════════════════
+function applyMode(idx) {
+  const md = M[idx];
+  if (!md) return;
+
+  // 1. CSS accent color variable
+  document.documentElement.style.setProperty('--accent', md.accent);
+  document.documentElement.style.setProperty('--accent-rgb', md.accentRgb);
+
+  // 2. Topbar globe color
+  document.getElementById('rmGlobe').style.background = md.globeBg;
+
+  // 3. Sidebar mode dot + label
+  document.getElementById('sbDot').style.background = md.accent;
+  document.getElementById('sbModeVal').textContent = md.name;
+
+  // 4. Topbar rm-big label (already set in setMode)
+  document.getElementById('rmLabel').textContent = md.name;
+
+  // 5. MODE BANNER
+  const b = md.banner;
+  document.getElementById('modeBanner').style.cssText =
+    `background:${b.bg};color:${b.color};border-radius:14px;padding:13px 18px;margin-bottom:16px;display:flex;align-items:center;gap:12px;`;
+  document.getElementById('modeBanner').innerHTML =
+    `<span class="mb-icon">${b.icon}</span>
+     <div class="mb-body">
+       <span class="mb-title" style="color:${b.color}">${b.title}</span>
+       <span class="mb-sub">${b.sub}</span>
+     </div>
+     <span class="mb-badge" style="background:${b.badgeBg};color:${b.badgeColor}">${b.badge}</span>`;
+
+  // 6. HERO background + content
+  const hm = document.getElementById('heroMain');
+  hm.style.background = md.heroBg;
+  const h = md.hero;
+  document.getElementById('heroH1').innerHTML = h.headline;
+  // Set accent color on .ac spans inside headline
+  setTimeout(()=>{
+    hm.querySelectorAll('.ac').forEach(el => el.style.color = md.accent);
+  }, 0);
+  document.getElementById('heroSub').textContent = h.sub;
+  const bp = document.getElementById('heroBtnP');
+  bp.textContent = h.btn1;
+  bp.style.background = md.accent;
+  bp.style.boxShadow = `0 4px 14px ${md.accent}55`;
+  document.getElementById('heroBtnS').textContent = h.btn2;
+  document.getElementById('heroScene').innerHTML = renderHeroScene(h, md.accent);
+  document.getElementById('heroFeats').innerHTML = renderHeroFeats(h.feats);
+
+  // 7. TRENDING BOOKS
+  document.getElementById('trendTitle').textContent = md.trending.title;
+  document.getElementById('bookRow').innerHTML = renderBooks(md.trending.books);
+
+  // 8. GIFT IDEAS
+  document.getElementById('giftTitle').textContent = md.gifts.title;
+  document.getElementById('giftGrid').innerHTML = renderGifts(md.gifts.items);
+
+  // 9. MOOD COLLECTIONS
+  document.getElementById('moodTitle').textContent = md.moods.title;
+  document.getElementById('moodGrid').innerHTML = renderMoods(md.moods.items);
+
+  // 10. COMMUNITY POST
+  document.getElementById('commPost').innerHTML = renderCommunity(md.community);
+  liked = false;
+
+  // 11. VIDEO STORIES
+  document.getElementById('vidList').innerHTML = renderVideos(md.videos);
+
+  // 12. NEARBY READERS
+  document.getElementById('nearList').innerHTML = renderNearby(md.nearby);
+
+  // 13. POPULAR BOOKS + TAGS
+  document.getElementById('popTags').innerHTML = renderPopularTags(md.popular.tags);
+  document.getElementById('popBooks').innerHTML = renderPopularBooks(md.popular.books);
+
+  // 14. Animate content
+  const ct = document.getElementById('content');
+  ct.classList.remove('mode-fade');
+  void ct.offsetWidth;
+  ct.classList.add('mode-fade');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  applyMode(0);
+});
+
+// ════════════════════════════════════════════════════════════════
+//  READER MODE DROPDOWN
+// ════════════════════════════════════════════════════════════════
+function toggleDrop(){
+  const drop = document.getElementById('rmDrop');
+  const btn  = document.getElementById('rmBtn');
+  const isOpen = drop.classList.toggle('open');
+  btn.classList.toggle('open', isOpen);
+}
+
+function setMode(idx){
+  // Update dropdown UI
+  for(let i=0;i<5;i++){
+    const opt = document.getElementById('rmO'+i);
+    opt.classList.remove('sel');
+    opt.querySelector('.rm-ck').classList.remove('on');
+  }
+  document.getElementById('rmO'+idx).classList.add('sel');
+  document.getElementById('rmO'+idx).querySelector('.rm-ck').classList.add('on');
+
+  // Close dropdown
+  document.getElementById('rmDrop').classList.remove('open');
+  document.getElementById('rmBtn').classList.remove('open');
+
+  // Apply mode changes to all sections
+  curMode = idx;
+  applyMode(idx);
+
+  toast('Switched to '+M[idx].name+' ✅', '#059669');
+}
+
+// Close dropdown on outside click
+document.addEventListener('click', e => {
+  if (!e.target.closest('.rm-wrap')) {
+    document.getElementById('rmDrop').classList.remove('open');
+    document.getElementById('rmBtn').classList.remove('open');
+  }
+});
+
+// ════════════════════════════════════════════════════════════════
+//  SIDEBAR
+// ════════════════════════════════════════════════════════════════
+function toggleSb(){
+  const sb = document.getElementById('sidebar');
+  const mn = document.getElementById('mainEl');
+  const eb = document.getElementById('sbEdge');
+  const ei = document.getElementById('sbEdgeIco');
+  const ov = document.getElementById('sbOv');
+
+  if(window.innerWidth <= 840){
+    const o = sb.classList.toggle('mob-open');
+    ov.classList.toggle('open', o);
+    return;
+  }
+  sbOpen = !sbOpen;
+  if(sbOpen){
+    sb.classList.remove('collapsed');
+    mn.classList.remove('full');
+    eb.classList.remove('at-zero');
+    eb.style.left = 'var(--sb-w)';
+    ei.className = 'fa fa-chevron-left';
+  } else {
+    sb.classList.add('collapsed');
+    mn.classList.add('full');
+    eb.classList.add('at-zero');
+    eb.style.left = '0px';
+    ei.className = 'fa fa-chevron-right';
+  }
+}
+function closeSb(){
+  document.getElementById('sidebar').classList.remove('mob-open');
+  document.getElementById('sbOv').classList.remove('open');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  CART
+// ════════════════════════════════════════════════════════════════
+function addCart(title){
+  cartCnt++;
+  document.getElementById('cartBadge').textContent = cartCnt;
+  toast(title + ' added to cart! 🛒', '#059669');
+}
+function scrollBks(dir){
+  document.getElementById('bookRow').scrollBy({left: dir * 300, behavior:'smooth'});
+}
+
+// ════════════════════════════════════════════════════════════════
+//  LIKE
+// ════════════════════════════════════════════════════════════════
+function toggleLike(){
+  liked = !liked;
+  const btn = document.getElementById('likeBtn');
+  const cnt = document.getElementById('likeCnt');
+  if(!btn || !cnt) return;
+  btn.classList.toggle('liked', liked);
+  const base = M[curMode].community.likes;
+  cnt.textContent = ' ' + (liked ? base + 1 : base);
+  if(liked) toast('Liked! ❤️');
+}
+
+// ════════════════════════════════════════════════════════════════
+//  SEARCH
+// ════════════════════════════════════════════════════════════════
+function handleSearch(q){
+  if(q.length > 2){
+    const all = M[curMode].trending.books;
+    const found = all.filter(b =>
+      b.t.toLowerCase().includes(q.toLowerCase()) ||
+      b.a.toLowerCase().includes(q.toLowerCase())
+    );
+    if(found.length) toast(`Found ${found.length} result(s) for "${q}"`);
+  }
+}
+
+// ════════════════════════════════════════════════════════════════
+//  QUIZ
+// ════════════════════════════════════════════════════════════════
+function openQuiz(){
+  qStep = 0; qAns = {};
+  renderQuizStep();
+  document.getElementById('quizOv').classList.add('open');
+}
+function closeQuiz(){
+  document.getElementById('quizOv').classList.remove('open');
+}
+function renderQuizStep(){
+  const s = QUIZ[qStep];
+  document.getElementById('quizStep').textContent = `Step ${qStep+1} of ${QUIZ.length}`;
+  document.getElementById('quizFill').style.width = `${((qStep+1)/QUIZ.length)*100}%`;
+  document.getElementById('quizTitle').textContent = s.title;
+  document.getElementById('quizDesc').textContent = s.desc;
+  document.getElementById('quizOpts').innerHTML = s.opts.map((o,i) =>
+    `<div class="quiz-opt${qAns[qStep]===i?' sel':''}" onclick="pickOpt(${i},this)">
+      <span class="quiz-emoji">${o.e}</span>${o.t}
+    </div>`
+  ).join('');
+  document.getElementById('quizNext').textContent =
+    qStep === QUIZ.length-1 ? '✨ Get My Box!' : 'Next →';
+}
+function pickOpt(i, el){
+  qAns[qStep] = i;
+  document.querySelectorAll('.quiz-opt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+}
+function quizNext(){
+  if(qAns[qStep] === undefined){ toast('Please pick an option! 👆','#ef4444'); return; }
+  if(qStep < QUIZ.length-1){ qStep++; renderQuizStep(); }
+  else { closeQuiz(); toast('🎉 Your perfect box is being curated! Delivery in 2–3 days.','#059669'); }
+}
+document.getElementById('quizOv').addEventListener('click', e => {
+  if(e.target === e.currentTarget) closeQuiz();
+});
+document.addEventListener('keydown', e => {
+  if(e.key === 'Escape') closeQuiz();
+});
+
+// ════════════════════════════════════════════════════════════════
+//  TOAST
+// ════════════════════════════════════════════════════════════════
+function toast(msg, bg){
+  const el = document.createElement('div');
+  el.className = 'toast';
+  el.textContent = msg;
+  if(bg) el.style.background = bg;
+  document.getElementById('toast-wrap').appendChild(el);
+  requestAnimationFrame(() => el.classList.add('show'));
+  setTimeout(() => {
+    el.classList.remove('show');
+    setTimeout(() => el.remove(), 300);
+  }, 2800);
+}
+</script>
+</body>
+</html>
